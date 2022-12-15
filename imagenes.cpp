@@ -854,7 +854,7 @@ void escala_color(int nfoto, int nres){
 
     Mat gris;
     cvtColor(foto[nfoto].img,gris,COLOR_BGR2GRAY);
-    //pasamos la imagen gris a "BGR" para crear los canales de color
+    //pasamos la imagen gris a "BGR" para triplicar los canales de color.
     cvtColor(gris,gris,COLOR_GRAY2BGR);
 
     //creamos la tabla LUT con tres canales de 8 bits cada uno.
@@ -866,7 +866,7 @@ void escala_color(int nfoto, int nres){
         //Cada posición de la tabla tendrá los tres valores
         if(A<128){
             //aqui estamos modificando el color azul
-            lut.at<Vec3b>(A)= Vec3b(vb*A/128, vg*A/128, vg*A/128);
+            lut.at<Vec3b>(A)= Vec3b(vb*A/128, vg*A/128, vr*A/128);
         }
         else {
             lut.at<Vec3b>(A)= Vec3b(vb+(255-vb)*(A-128)/128,
@@ -1015,7 +1015,46 @@ void ver_color_falso(int nfoto,int tipo_color, bool guardar){
     }
 }
 
+//---------------------------------------------------------------------------
 
+void ver_rojo_verde_azul(int nfoto, double valores_mult[], double valores_suma[],bool guardar){
+
+    Mat imres=foto[nfoto].img.clone();
+    cvtColor(imres,imres,COLOR_BGR2RGB);
+
+    Mat canales[3];
+    split(imres,canales);
+
+    canales[0]+=valores_suma[0];
+    canales[1]+=valores_suma[1];
+    canales[2]+=valores_suma[2];
+
+    canales[0]*=valores_mult[0];
+    canales[1]*=valores_mult[1];
+    canales[2]*=valores_mult[2];
+
+
+
+    merge(canales,3,imres);
+    cvtColor(imres,imres,COLOR_RGB2BGR);
+    imshow("Ajuste RGB",imres);
+    if(guardar){
+        destroyWindow("Ajuste RGB");
+        crear_nueva(primera_libre(),imres);
+    }
+}
+
+//---------------------------------------------------------------------------
+
+void ver_ecualizacion_histograma(int nfoto, int modo){
+    Mat img= foto[nfoto].img;
+
+
+
+
+
+
+}
 string Lt1(string cadena)
 {
     QString temp= QString::fromUtf8(cadena.c_str());

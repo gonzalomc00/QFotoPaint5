@@ -83,6 +83,7 @@ private slots:
     void on_actionPerspectiva_triggered();
     void on_actionMovimiento_triggered();
     void on_actionConvertir_a_color_falso_triggered();
+    void on_actionRojo_Verde_Azul_triggered();
 };
 
 extern MainWindow *w;
