@@ -192,6 +192,8 @@ void ver_rojo_verde_azul(int nfoto, double valores_mult[],double valores_sum[],b
 //Ajustar cada uno de los canales de manera independiente para poder hacer transformaciones de color
 
 void ver_ecualizacion_histograma(int nfoto,int modo, bool guardar=false);
+//Realizar ecualización conjunta o por canales del histograma de una imagen
+
 
 
 string Lt1(string cadena);

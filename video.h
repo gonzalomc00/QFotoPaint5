@@ -39,5 +39,8 @@ void mostrar_camara (void);
 void capturar_camara(int nres);
 // Captura de camara, el parámetro hace referencia a la imagen donde vamos a guardarlo
 
+void minima_maxima(String nombre, int framei, int framef);
+//Obten la imagen minima y maxima de los frames escogidos de un video.
+
 
 #endif // VIDEO_H

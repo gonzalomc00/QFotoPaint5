@@ -1046,15 +1046,44 @@ void ver_rojo_verde_azul(int nfoto, double valores_mult[], double valores_suma[]
 
 //---------------------------------------------------------------------------
 
-void ver_ecualizacion_histograma(int nfoto, int modo){
+void ver_ecualizacion_histograma(int nfoto, int modo, bool guardar){
+
+    if(modo==0){
     Mat img= foto[nfoto].img;
+    Mat gris, hist;
+    cvtColor(img, gris, COLOR_BGR2GRAY);
+    int canales[1]= {0}, bins[1]= {256};
+    float rango[2]= {0, 256};
+    const float *rangos[]= {rango};
+    calcHist(&gris, 1, canales, noArray(), hist, 1, bins, rangos);
+    hist*= 255.0/norm(hist, NORM_L1);
+    Mat lut(1, 256, CV_8UC1);
+    float acum= 0.0;
+    for (int i= 0; i<256; i++) {
+        lut.at<uchar>(0, i)= acum;
+        acum+= hist.at<float>(i);
+    }
+    Mat res;
+    LUT(img, lut, res);
+    imshow("Ecualizada", res);
+    }
+
+        else{
+    Mat img=foto[nfoto].img;
+    Mat res;
+    Mat canales[3];
+    split(img,canales);
+    equalizeHist( canales[0],canales[0] );
+    equalizeHist( canales[1],canales[1] );
+    equalizeHist( canales[2],canales[2] );
+    merge(canales,3,res);
+    imshow("Ecualizada separado",res);
 
 
 
-
-
-
+    }
 }
+
 string Lt1(string cadena)
 {
     QString temp= QString::fromUtf8(cadena.c_str());
