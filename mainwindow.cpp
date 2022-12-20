@@ -30,6 +30,8 @@ using namespace cv;
 #include "video.h"
 #include "movimiento.h"
 #include "falsocolor.h"
+#include "rotarcualquiera.h"
+
 
 QString FiltroImagen = "Todos los formatos (*.jpg *.jpeg *.jpe .jp2 *.tif *.tiff *.png *.gif *.bmp *.dib *.webp *.ppm);;Archivos JPG (*.jpg *.jpeg *.jpe);;Archivos TIF (*.tif *.tiff);;Archivos PNG (*.png);;Archivos GIF (*.gif);;Archivos BMP (*.bmp *.dib);;Otros (*.*)";
 
@@ -428,6 +430,9 @@ void MainWindow::on_actionBajorrelieve_triggered()
 
 }
 
+
+
+
 void MainWindow::on_actionAjuste_lineal_triggered()
 {
     if(foto_activa()!= -1){
@@ -539,5 +544,15 @@ void MainWindow::on_actionConvertir_a_color_falso_triggered()
     if(foto_activa()!= -1 && primera_libre()!=-1){
         falsocolor fc(foto_activa());
         fc.exec();
+    }
+}
+
+//rotar cualquiera
+void MainWindow::on_actionElegir_ngulo_triggered()
+{
+    if(foto_activa()!= -1 && primera_libre()!=-1){
+        rotarcualquiera r(foto_activa());
+
+        r.exec();
     }
 }

@@ -799,6 +799,32 @@ void ver_bajorrelieve(int nfoto, double angulo, double grado, int fondo,
     }
 
 }
+//---------------------------------------------------------------------------
+void ver_rotar_cualquiera(int nfoto, int angulo, double escala, bool guardar){
+
+    Mat entrada= foto[nfoto].img;
+    Mat res;
+
+    double w= entrada.size().width, h= entrada.size().height;
+    double sa= sin(angulo*M_PI/180), ca= cos(angulo*M_PI/180);
+    double cx= -w/2*ca-h/2*sa, cy= w/2*sa-h/2*ca;
+    sa= fabs(sa); ca= fabs(ca);
+
+    Size tam((w*ca+h*sa)*escala, (h*ca+w*sa)*escala);
+
+    Mat M= getRotationMatrix2D(Point2f(0,0), angulo, escala);
+    M.at<double>(0,2)= tam.width/2+cx*escala;
+    M.at<double>(1,2)= tam.height/2+cy*escala;
+    warpAffine(entrada, res, M, tam);
+
+    imshow("Rotacion",res);
+
+    if(guardar){
+        crear_nueva(primera_libre(),res);
+    }else{
+        imshow("Rotacion",res);
+    }
+}
 
 //---------------------------------------------------------------------------
 void ver_ajuste_lineal(int nfoto, double pmin, double pmax, bool guardar){

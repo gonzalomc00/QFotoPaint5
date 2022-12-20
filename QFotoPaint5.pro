@@ -28,6 +28,7 @@ SOURCES += main.cpp\
     perfilado.cpp \
     perspectiva.cpp \
     pincharestirar.cpp \
+    rotarcualquiera.cpp \
     suavizados.cpp \
     video.cpp \
     rotaravideo.cpp \
@@ -48,6 +49,7 @@ HEADERS  += mainwindow.h \
     perfilado.h \
     perspectiva.h \
     pincharestirar.h \
+    rotarcualquiera.h \
     suavizados.h \
     video.h \
     rotaravideo.h \
@@ -67,15 +69,16 @@ FORMS    += mainwindow.ui \
     perfilado.ui \
     perspectiva.ui \
     pincharestirar.ui \
+    rotarcualquiera.ui \
     suavizados.ui \
     rotaravideo.ui \
     mediaponderada.ui \
     acercade.ui \
     mediadevideo.ui
 
-INCLUDEPATH += "C:\OpenCV\OpenCV4.6.0G\include"
+INCLUDEPATH += "C:\opencv\opencv4.6.0g\OpenCV4.6.0G\include"
 
-LIBS += -L"C:\OpenCV\OpenCV4.6.0G\lib"\
+LIBS += -L"C:\opencv\opencv4.6.0g\OpenCV4.6.0G\lib"\
         -llibopencv_world460
 
 RESOURCES += recursos.qrc

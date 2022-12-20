@@ -188,6 +188,12 @@ void ver_perspectiva(int nfoto1, int nfoto2, Point2f pt1[], Point2f pt2[],bool g
 void ver_color_falso(int nfoto,int tipo_color, bool guardar=false);
 //Transformación para aplicar un color falso a una imagen
 
+void ver_rotar_cualquiera(int nfoto,int angulo,double escala,bool guardar = false);
+// Rota la imagen contenida en nfoto, en la cantidad angulo
+// la reescala al tamaaño escala y la almacena en nres.
+// Se trata siempre de una rotación exacta
+//por defecto la escala será a 1 y guardar estado a falso
+
 string Lt1(string cadena);
 // Convertir una cadena de UTF8 a Latin1
 

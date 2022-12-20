@@ -407,7 +407,7 @@ p, li { white-space: pre-wrap; }
      <x>0</x>
      <y>0</y>
      <width>544</width>
-     <height>21</height>
+     <height>26</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuArchivo">
@@ -475,6 +475,7 @@ p, li { white-space: pre-wrap; }
      <addaction name="actionRotar_90"/>
      <addaction name="actionRotar_180"/>
      <addaction name="actionRotar_91"/>
+     <addaction name="actionElegir_ngulo"/>
     </widget>
     <addaction name="actionBrillo_contraste"/>
     <addaction name="actionMatiz_saturacion_luminosidad"/>
@@ -773,6 +774,11 @@ p, li { white-space: pre-wrap; }
   <action name="actionConvertir_a_color_falso">
    <property name="text">
     <string>Convertir a color falso </string>
+   </property>
+  </action>
+  <action name="actionElegir_ngulo">
+   <property name="text">
+    <string>Rotar cualquier ángulo</string>
    </property>
   </action>
  </widget>
