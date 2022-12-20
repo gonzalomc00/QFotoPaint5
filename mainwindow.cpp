@@ -31,6 +31,7 @@ using namespace cv;
 #include "movimiento.h"
 #include "falsocolor.h"
 #include "rojoverdeazul.h"
+#include "minimomaximo.h"
 
 QString FiltroImagen = "Todos los formatos (*.jpg *.jpeg *.jpe .jp2 *.tif *.tiff *.png *.gif *.bmp *.dib *.webp *.ppm);;Archivos JPG (*.jpg *.jpeg *.jpe);;Archivos TIF (*.tif *.tiff);;Archivos PNG (*.png);;Archivos GIF (*.gif);;Archivos BMP (*.bmp *.dib);;Otros (*.*)";
 
@@ -565,14 +566,12 @@ void MainWindow::on_actionEcualizaci_n_del_histograma_triggered()
 
 void MainWindow::on_actionMinima_Maxima_triggered()
 {
-    VideoCapture cap;
     if(primera_libre()!=-1){
         QString nombre=QFileDialog::getOpenFileName();
         if(!nombre.isEmpty()){
-            if(cap.open(nombre.toLatin1().data())){
-                int nframes=cap.get(CAP_PROP_FRAME_COUNT);
-                minima_maxima(nombre.toLatin1().data(),0,nframes);
-            }
+            MinimoMaximo mm(nombre, primera_libre());
+            if(mm.isOpened())
+                mm.exec();
         }
     }
 }
