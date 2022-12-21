@@ -522,10 +522,17 @@ p, li { white-space: pre-wrap; }
      <addaction name="actionImagen_media"/>
      <addaction name="actionMovimiento"/>
      <addaction name="actionMinima_Maxima"/>
+     <addaction name="actionCaras"/>
+    </widget>
+    <widget class="QMenu" name="menuV_deo_a_video">
+     <property name="title">
+      <string>Vídeo a video</string>
+     </property>
+     <addaction name="actionDetectar_cara_a_v_deo"/>
     </widget>
     <addaction name="menuImagen_a_v_deo"/>
     <addaction name="menuV_deo_a_imagen"/>
-    <addaction name="actionV_deo_a_video"/>
+    <addaction name="menuV_deo_a_video"/>
    </widget>
    <widget class="QMenu" name="menuAyuda">
     <property name="title">
@@ -646,11 +653,6 @@ p, li { white-space: pre-wrap; }
   <action name="actionMedia">
    <property name="text">
     <string>Media...</string>
-   </property>
-  </action>
-  <action name="actionV_deo_a_video">
-   <property name="text">
-    <string>Vídeo a video</string>
    </property>
   </action>
   <action name="actionRotar_imagen">
@@ -791,6 +793,16 @@ p, li { white-space: pre-wrap; }
   <action name="actionMinima_Maxima">
    <property name="text">
     <string>Minima/Maxima...</string>
+   </property>
+  </action>
+  <action name="actionCaras">
+   <property name="text">
+    <string>Caras</string>
+   </property>
+  </action>
+  <action name="actionDetectar_cara_a_v_deo">
+   <property name="text">
+    <string>Detectar cara a vídeo...</string>
    </property>
   </action>
  </widget>

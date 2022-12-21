@@ -26,11 +26,9 @@ void falsocolor::on_horizontalSlider_valueChanged(int value)
 void falsocolor::on_falsocolor_accepted()
 {
     ver_color_falso(nfoto,color_falso,true);
-    destroyWindow("Aplicar falso color");
 }
 
 void falsocolor::on_falsocolor_rejected()
 {
-    destroyWindow("Aplicar falso color");
-    destroyWindow("Resultado");
+    mostrar(nfoto);
 }

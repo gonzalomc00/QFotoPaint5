@@ -86,6 +86,8 @@ private slots:
     void on_actionRojo_Verde_Azul_triggered();
     void on_actionEcualizaci_n_del_histograma_triggered();
     void on_actionMinima_Maxima_triggered();
+    void on_actionCaras_triggered();
+    void on_actionDetectar_cara_a_v_deo_triggered();
 };
 
 extern MainWindow *w;

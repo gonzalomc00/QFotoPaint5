@@ -117,5 +117,5 @@ void RojoVerdeAzul::on_RojoVerdeAzul_accepted()
 
 void RojoVerdeAzul::on_RojoVerdeAzul_rejected()
 {
-    destroyWindow("Resultado RGB");
+   mostrar(nfoto);
 }
