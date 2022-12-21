@@ -1110,6 +1110,104 @@ void ver_ecualizacion_histograma(int nfoto, int modo, bool guardar){
     }
 }
 
+//---------------------------------------
+QString ver_informacion_imagen(int nfoto, int tipo){
+
+    Mat imagen= foto[nfoto].img;
+    QString valor;
+    Scalar media_color = mean(imagen);
+
+    switch(tipo){
+    case 0:
+    {
+        //tamaño (dimensiones)
+        valor = QString("Anchura: %1, Altura: %2").arg(imagen.cols).arg(imagen.rows);
+        break;
+    }
+    case 1:
+    {
+        //número de canales
+        valor = QString::number(imagen.channels());
+        break;
+    }
+    case 2:
+    {
+        //memoria ocupada
+        int tamanioBytes = 0;
+        if(imagen.isContinuous()){
+            tamanioBytes = imagen.total() * imagen.elemSize();
+        }else{
+            tamanioBytes = imagen.step[0] * imagen.rows;
+
+        }
+        valor = QString("Tamaño en Bytes: %1").arg(tamanioBytes);
+        break;
+    }
+    case 3:
+    {
+        //profundidad
+        int profundidad = imagen.depth();
+        switch(profundidad){
+        //{ CV_8U=0, CV_8S=1, CV_16U=2, CV_16S=3, CV_32S=4, CV_32F=5, CV_64F=6 }
+        case 0:
+            valor = "CV_8U";
+            break;
+        case 1:
+            valor = "CV_8S";
+            break;
+        case 2:
+            valor = "CV_16U";
+            break;
+        case 3:
+            valor = "CV_16S";
+            break;
+        case 4:
+            valor = "CV_32S";
+            break;
+        case 5:
+            valor = "CV_32F";
+            break;
+        case 6:
+            valor = "CV_64F";
+            break;
+        }
+        break;
+    }
+    case 4:{
+        //ratio
+        valor = QString::number(imagen.size().aspectRatio());
+        break;
+    }
+    case 5: {
+        //media color
+        double media_imagen = (media_color[0] + media_color[1] + media_color[2]) / 3;
+        //BGR
+        double mediaRojo = media_color[2];
+        double mediaVerde = media_color[1];
+        double mediaAzul = media_color[0];
+
+        valor = QString("Color medio de la imagen: %1 \nColor Rojo: %2 \nColor Verde: %3 \nColor Azul: %4 ").arg(media_imagen).arg(mediaRojo).arg(mediaVerde).arg(mediaAzul);
+        break;
+    }
+    case 6:{
+        //estilo color
+           QColor color = QColor(media_color[2],media_color[1],media_color[0]);
+           valor= "background-color: rgb(";
+           valor+= QString::number(color.red())+",";
+           valor+= QString::number(color.green())+",";
+           valor+= QString::number(color.blue())+")";
+        break;
+    }
+
+
+    }
+
+      return valor;
+
+}
+
+
+
 string Lt1(string cadena)
 {
     QString temp= QString::fromUtf8(cadena.c_str());

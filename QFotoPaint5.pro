@@ -32,6 +32,7 @@ SOURCES += main.cpp\
     rojoverdeazul.cpp \
     rotarcualquiera.cpp \
     suavizados.cpp \
+    ver_informacion.cpp \
     video.cpp \
     rotaravideo.cpp \
     mediaponderada.cpp \
@@ -55,6 +56,7 @@ HEADERS  += mainwindow.h \
     rojoverdeazul.h \
     rotarcualquiera.h \
     suavizados.h \
+    ver_informacion.h \
     video.h \
     rotaravideo.h \
     mediaponderada.h \
@@ -80,7 +82,8 @@ FORMS    += mainwindow.ui \
     rotaravideo.ui \
     mediaponderada.ui \
     acercade.ui \
-    mediadevideo.ui
+    mediadevideo.ui \
+    ver_informacion.ui
 
 INCLUDEPATH += "C:\opencv\opencv4.6.0g\OpenCV4.6.0G\include"
 

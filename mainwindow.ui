@@ -445,6 +445,7 @@ p, li { white-space: pre-wrap; }
      <addaction name="actionRojo"/>
      <addaction name="actionVerde"/>
      <addaction name="actionAzul"/>
+     <addaction name="actionBidimensional"/>
     </widget>
     <addaction name="actionSeleccionar_todo"/>
     <addaction name="actionCopiar_a_nueva"/>
@@ -452,6 +453,7 @@ p, li { white-space: pre-wrap; }
     <addaction name="separator"/>
     <addaction name="menuOpciones"/>
     <addaction name="menuVer_histograma"/>
+    <addaction name="actionVer_informaci_n"/>
    </widget>
    <widget class="QMenu" name="menuHerramientas">
     <property name="title">
@@ -797,6 +799,16 @@ p, li { white-space: pre-wrap; }
   <action name="actionElegir_ngulo">
    <property name="text">
     <string>Rotar cualquier ángulo</string>
+   </property>
+  </action>
+  <action name="actionVer_informaci_n">
+   <property name="text">
+    <string>Ver información</string>
+   </property>
+  </action>
+  <action name="actionBidimensional">
+   <property name="text">
+    <string>Bidimensional</string>
    </property>
   </action>
  </widget>

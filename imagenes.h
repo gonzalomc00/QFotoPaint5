@@ -5,6 +5,8 @@
 using namespace std;
 #include <opencv2/opencv.hpp>
 using namespace cv;
+#include <QString>
+
 
 ///////////////////////////////////////////////////////////////////
 /////////  DEFINICIONES PUBLICAS                     //////////////
@@ -195,12 +197,15 @@ void ver_ecualizacion_histograma(int nfoto,int modo, bool guardar=false);
 //Realizar ecualización conjunta o por canales del histograma de una imagen
 
 
-
 void ver_rotar_cualquiera(int nfoto,int angulo,double escala,bool guardar = false);
 // Rota la imagen contenida en nfoto, en la cantidad angulo
 // la reescala al tamaaño escala y la almacena en nres.
 // Se trata siempre de una rotación exacta
 //por defecto la escala será a 1 y guardar estado a falso
+
+QString ver_informacion_imagen(int nfoto, int tipo);
+// Devuelve la informacion de nfoto segun el tipo que se requiera
+
 
 string Lt1(string cadena);
 // Convertir una cadena de UTF8 a Latin1
