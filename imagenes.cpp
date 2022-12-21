@@ -1033,11 +1033,14 @@ void ver_color_falso(int nfoto,int tipo_color, bool guardar){
     Mat img=foto[nfoto].img.clone();
     Mat img_color;
     applyColorMap(img,img_color,tipo_color);
-    imshow("Resultado",img_color);
 
-    if(guardar){
-        destroyWindow("Resultado");
-        crear_nueva(primera_libre(),img_color);
+    imshow(foto[nfoto].nombre,img_color);
+
+    if (guardar) {
+        img_color.copyTo(foto[nfoto].img);
+        foto[nfoto].modificada= true;
+        mostrar(nfoto);
+
     }
 }
 
@@ -1063,10 +1066,12 @@ void ver_rojo_verde_azul(int nfoto, double valores_mult[], double valores_suma[]
 
     merge(canales,3,imres);
     cvtColor(imres,imres,COLOR_RGB2BGR);
-    imshow("Ajuste RGB",imres);
-    if(guardar){
-        destroyWindow("Ajuste RGB");
-        crear_nueva(primera_libre(),imres);
+    imshow(foto[nfoto].nombre,imres);
+    if (guardar) {
+        imres.copyTo(foto[nfoto].img);
+        foto[nfoto].modificada= true;
+        mostrar(nfoto);
+
     }
 }
 
@@ -1074,6 +1079,7 @@ void ver_rojo_verde_azul(int nfoto, double valores_mult[], double valores_suma[]
 
 void ver_ecualizacion_histograma(int nfoto, int modo, bool guardar){
 
+    Mat res;
     if(modo==0){
     Mat img= foto[nfoto].img;
     Mat gris, hist;
@@ -1089,25 +1095,29 @@ void ver_ecualizacion_histograma(int nfoto, int modo, bool guardar){
         lut.at<uchar>(0, i)= acum;
         acum+= hist.at<float>(i);
     }
-    Mat res;
     LUT(img, lut, res);
-    imshow("Ecualizada", res);
+    imshow(foto[nfoto].nombre, res);
     }
 
         else{
     Mat img=foto[nfoto].img;
-    Mat res;
     Mat canales[3];
     split(img,canales);
     equalizeHist( canales[0],canales[0] );
     equalizeHist( canales[1],canales[1] );
     equalizeHist( canales[2],canales[2] );
     merge(canales,3,res);
-    imshow("Ecualizada separado",res);
-
-
+    imshow(foto[nfoto].nombre,res);
 
     }
+
+        if (guardar) {
+            res.copyTo(foto[nfoto].img);
+            foto[nfoto].modificada= true;
+            mostrar(nfoto);
+
+        }
+
 }
 
 //---------------------------------------
@@ -1206,6 +1216,9 @@ QString ver_informacion_imagen(int nfoto, int tipo){
 
 }
 
+
+
+//---------------------------------------------------------------------------
 
 
 string Lt1(string cadena)

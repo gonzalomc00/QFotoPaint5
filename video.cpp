@@ -3,6 +3,8 @@
 #include "video.h"
 #include <math.h>
 #include <QtDebug>
+#include <QFileDialog>
+#include "string.h"
 
 ///////////////////////////////////////////////////////////////////
 /////////  VARIABLES GLOBALES PRIVADAS               //////////////
@@ -211,3 +213,116 @@ void minima_maxima(String nombre, int framei, int framef){
 
      }
 }
+
+void ver_caras_video(String nombre){
+    VideoCapture cap;
+
+    if(nombre.compare("cam")==0){
+        cap.open(0);
+    }
+    else{
+        cap.open(nombre);
+    }
+    CascadeClassifier cascade("C:/OpenCV/OpenCV4.6.0G/data/haarcascades/haarcascade_frontalface_alt.xml");
+    std::vector<Rect> caras;
+    Mat img;
+    QString nombre_resultado= QFileDialog::getSaveFileName();
+
+
+    if(cap.isOpened()){
+
+    //tratamos el primer frame
+    cap.read(img);
+    VideoWriter writer(nombre_resultado.toLatin1().data(),VideoWriter::fourcc('M','J','P','G'),
+                       25, img.size());
+    if (!writer.isOpened()) {
+     qDebug("No se puede crear %s.", nombre_resultado.toLatin1().data());
+     return;
+     }
+
+    cascade.detectMultiScale(img, caras, 1.2);
+    for (int i= 0; i<caras.size(); i++){
+      rectangle(img, caras[i], CV_RGB(255,0,0), 2);
+    }
+    writer <<img;
+
+    //tratamos el resto de frames
+    while (cap.read(img) && waitKey(1)==-1) {
+           cascade.detectMultiScale(img, caras, 1.2);
+           for (int i= 0; i<caras.size(); i++){
+             rectangle(img, caras[i], CV_RGB(255,0,0), 2);
+           }
+           namedWindow("Imagen", WINDOW_NORMAL);
+           imshow("Imagen", img);
+           writer << img;
+
+
+    }
+    destroyWindow("Imagen");
+    writer.release();
+
+}
+
+}
+
+void ver_caras(String nombre){
+    VideoCapture cap(nombre);
+    CascadeClassifier cascade("C:/OpenCV/OpenCV4.6.0G/data/haarcascades/haarcascade_frontalface_alt.xml");
+    std::vector<Rect> caras;
+    std::vector<Mat> imagenes_caras;
+    Mat img,res,temp;
+
+
+
+
+    //tratamos el resto de frames
+    while (cap.read(img) && waitKey(1)==-1) {
+           cascade.detectMultiScale(img, caras, 1.2);
+           for (int i= 0; i<caras.size(); i++){
+               temp=img(caras[i]);
+               cv::resize(temp, temp, Size(50,50), 0, 0, cv::INTER_CUBIC);
+                imagenes_caras.push_back(temp);
+           }
+
+
+    }
+
+    //Calculamos el area de imagen que debemos rellenar.
+    int num_images = std::ceil(std::sqrt(imagenes_caras.size()));
+
+    //Array de filas
+    std::vector<Mat> filas;
+
+    for (int i = 0; i <num_images-1; i++) {
+        // Crea una fila de imágenes
+        std::vector<Mat> fila;
+        for (int j = i * num_images; j < (i + 1) * num_images; j++) {
+          if (j >= imagenes_caras.size()) {
+            // Si nos hemos quedado sin imagenes, rellenamos con un cuadrado blanco hasta llegar al final
+            fila.push_back(Mat::zeros(Size(50, 50), CV_8UC3));
+          } else {
+            // Añade la imagen a la fila
+            fila.push_back(imagenes_caras[j]);
+          }
+        }
+
+        //A partir de todas las imagenes que hemos generado de caras y que tenemos en el array
+        //generamos una imagen que represente a una fila.
+          Mat imagen_fila;
+          hconcat(fila, imagen_fila);
+
+          // Añadimos la imagen de fila generada al total de filas
+          filas.push_back(imagen_fila);
+    }
+
+
+    vconcat(filas,res);
+
+    namedWindow("Imagen", WINDOW_NORMAL);
+    imshow("Imagen",res);
+
+
+}
+
+
+

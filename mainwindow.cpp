@@ -32,6 +32,8 @@ using namespace cv;
 #include "falsocolor.h"
 #include "rojoverdeazul.h"
 #include "minimomaximo.h"
+#include "ecualizarhistograma.h"
+#include "detectarcarasvideo.h"
 #include "rotarcualquiera.h"
 #include "ver_informacion.h"
 
@@ -564,8 +566,8 @@ void MainWindow::on_actionRojo_Verde_Azul_triggered()
 void MainWindow::on_actionEcualizaci_n_del_histograma_triggered()
 {
     if(foto_activa()!= -1 && primera_libre()!=-1){
-        ver_ecualizacion_histograma(foto_activa(),1);
-        ver_ecualizacion_histograma(foto_activa(),0);
+       EcualizarHistograma eh(foto_activa());
+       eh.exec();
     }
 }
 
@@ -580,6 +582,21 @@ void MainWindow::on_actionMinima_Maxima_triggered()
                 mm.exec();
         }
     }
+}
+
+void MainWindow::on_actionCaras_triggered()
+{
+
+    QString nombre=QFileDialog::getOpenFileName();
+    if(!nombre.isEmpty()){
+    ver_caras(nombre.toLatin1().data());
+    }
+}
+
+void MainWindow::on_actionDetectar_cara_a_v_deo_triggered()
+{
+    DetectarCarasVideo dcv(this);
+    dcv.exec();
 }
 
 //rotar cualquiera

@@ -18,6 +18,8 @@ SOURCES += main.cpp\
     ajustelineal.cpp \
     bajorrelieve.cpp \
     capturarvideo.cpp \
+    detectarcarasvideo.cpp \
+    ecualizarhistograma.cpp \
     falsocolor.cpp \
     mainwindow.cpp \
     imagenes.cpp \
@@ -43,6 +45,8 @@ HEADERS  += mainwindow.h \
     ajustelineal.h \
     bajorrelieve.h \
     capturarvideo.h \
+    detectarcarasvideo.h \
+    ecualizarhistograma.h \
     falsocolor.h \
     imagenes.h \
     dialognueva.h \
@@ -67,8 +71,10 @@ FORMS    += mainwindow.ui \
     ajustelineal.ui \
     bajorrelieve.ui \
     capturarvideo.ui \
+    detectarcarasvideo.ui \
     dialognueva.ui \
     brillocontraste.ui \
+    ecualizarhistograma.ui \
     falsocolor.ui \
     matsatlum.ui \
     minimomaximo.ui \
