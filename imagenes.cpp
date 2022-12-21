@@ -880,7 +880,7 @@ void escala_color(int nfoto, int nres){
 
     Mat gris;
     cvtColor(foto[nfoto].img,gris,COLOR_BGR2GRAY);
-    //pasamos la imagen gris a "BGR" para crear los canales de color
+    //pasamos la imagen gris a "BGR" para triplicar los canales de color.
     cvtColor(gris,gris,COLOR_GRAY2BGR);
 
     //creamos la tabla LUT con tres canales de 8 bits cada uno.
@@ -892,7 +892,7 @@ void escala_color(int nfoto, int nres){
         //Cada posición de la tabla tendrá los tres valores
         if(A<128){
             //aqui estamos modificando el color azul
-            lut.at<Vec3b>(A)= Vec3b(vb*A/128, vg*A/128, vg*A/128);
+            lut.at<Vec3b>(A)= Vec3b(vb*A/128, vg*A/128, vr*A/128);
         }
         else {
             lut.at<Vec3b>(A)= Vec3b(vb+(255-vb)*(A-128)/128,
@@ -1041,6 +1041,74 @@ void ver_color_falso(int nfoto,int tipo_color, bool guardar){
     }
 }
 
+//---------------------------------------------------------------------------
+
+void ver_rojo_verde_azul(int nfoto, double valores_mult[], double valores_suma[],bool guardar){
+
+    Mat imres=foto[nfoto].img.clone();
+    cvtColor(imres,imres,COLOR_BGR2RGB);
+
+    Mat canales[3];
+    split(imres,canales);
+
+    canales[0]+=valores_suma[0];
+    canales[1]+=valores_suma[1];
+    canales[2]+=valores_suma[2];
+
+    canales[0]*=valores_mult[0];
+    canales[1]*=valores_mult[1];
+    canales[2]*=valores_mult[2];
+
+
+
+    merge(canales,3,imres);
+    cvtColor(imres,imres,COLOR_RGB2BGR);
+    imshow("Ajuste RGB",imres);
+    if(guardar){
+        destroyWindow("Ajuste RGB");
+        crear_nueva(primera_libre(),imres);
+    }
+}
+
+//---------------------------------------------------------------------------
+
+void ver_ecualizacion_histograma(int nfoto, int modo, bool guardar){
+
+    if(modo==0){
+    Mat img= foto[nfoto].img;
+    Mat gris, hist;
+    cvtColor(img, gris, COLOR_BGR2GRAY);
+    int canales[1]= {0}, bins[1]= {256};
+    float rango[2]= {0, 256};
+    const float *rangos[]= {rango};
+    calcHist(&gris, 1, canales, noArray(), hist, 1, bins, rangos);
+    hist*= 255.0/norm(hist, NORM_L1);
+    Mat lut(1, 256, CV_8UC1);
+    float acum= 0.0;
+    for (int i= 0; i<256; i++) {
+        lut.at<uchar>(0, i)= acum;
+        acum+= hist.at<float>(i);
+    }
+    Mat res;
+    LUT(img, lut, res);
+    imshow("Ecualizada", res);
+    }
+
+        else{
+    Mat img=foto[nfoto].img;
+    Mat res;
+    Mat canales[3];
+    split(img,canales);
+    equalizeHist( canales[0],canales[0] );
+    equalizeHist( canales[1],canales[1] );
+    equalizeHist( canales[2],canales[2] );
+    merge(canales,3,res);
+    imshow("Ecualizada separado",res);
+
+
+
+    }
+}
 
 string Lt1(string cadena)
 {

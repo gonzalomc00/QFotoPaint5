@@ -84,6 +84,9 @@ private slots:
     void on_actionMovimiento_triggered();
     void on_actionConvertir_a_color_falso_triggered();
     void on_actionElegir_ngulo_triggered();
+    void on_actionRojo_Verde_Azul_triggered();
+    void on_actionEcualizaci_n_del_histograma_triggered();
+    void on_actionMinima_Maxima_triggered();
 };
 
 extern MainWindow *w;

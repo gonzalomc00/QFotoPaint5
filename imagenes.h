@@ -188,6 +188,14 @@ void ver_perspectiva(int nfoto1, int nfoto2, Point2f pt1[], Point2f pt2[],bool g
 void ver_color_falso(int nfoto,int tipo_color, bool guardar=false);
 //Transformación para aplicar un color falso a una imagen
 
+void ver_rojo_verde_azul(int nfoto, double valores_mult[],double valores_sum[],bool guardar=false);
+//Ajustar cada uno de los canales de manera independiente para poder hacer transformaciones de color
+
+void ver_ecualizacion_histograma(int nfoto,int modo, bool guardar=false);
+//Realizar ecualización conjunta o por canales del histograma de una imagen
+
+
+
 void ver_rotar_cualquiera(int nfoto,int angulo,double escala,bool guardar = false);
 // Rota la imagen contenida en nfoto, en la cantidad angulo
 // la reescala al tamaaño escala y la almacena en nres.

@@ -24,10 +24,12 @@ SOURCES += main.cpp\
     dialognueva.cpp \
     brillocontraste.cpp \
     matsatlum.cpp \
+    minimomaximo.cpp \
     movimiento.cpp \
     perfilado.cpp \
     perspectiva.cpp \
     pincharestirar.cpp \
+    rojoverdeazul.cpp \
     rotarcualquiera.cpp \
     suavizados.cpp \
     video.cpp \
@@ -45,10 +47,12 @@ HEADERS  += mainwindow.h \
     dialognueva.h \
     brillocontraste.h \
     matsatlum.h \
+    minimomaximo.h \
     movimiento.h \
     perfilado.h \
     perspectiva.h \
     pincharestirar.h \
+    rojoverdeazul.h \
     rotarcualquiera.h \
     suavizados.h \
     video.h \
@@ -65,10 +69,12 @@ FORMS    += mainwindow.ui \
     brillocontraste.ui \
     falsocolor.ui \
     matsatlum.ui \
+    minimomaximo.ui \
     movimiento.ui \
     perfilado.ui \
     perspectiva.ui \
     pincharestirar.ui \
+    rojoverdeazul.ui \
     rotarcualquiera.ui \
     suavizados.ui \
     rotaravideo.ui \

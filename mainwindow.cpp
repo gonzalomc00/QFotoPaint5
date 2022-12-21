@@ -30,6 +30,8 @@ using namespace cv;
 #include "video.h"
 #include "movimiento.h"
 #include "falsocolor.h"
+#include "rojoverdeazul.h"
+#include "minimomaximo.h"
 #include "rotarcualquiera.h"
 
 
@@ -486,19 +488,20 @@ void MainWindow::on_actionPerfilar_triggered()
 }
 
 
-//PREGUNTAR SOBRE ESTO
 void MainWindow::on_actionNueva_desde_portapapeles_triggered()
 {
     const QClipboard *clipboard = QApplication::clipboard();
-    const QMimeData *mimeData = clipboard->mimeData();
 
     int pl= primera_libre();
     if (pl != -1) {
-        if (mimeData->hasImage()){
+        if (!clipboard->image().isNull()){
             QImage image(clipboard->image());
-            QImage copia=image.copy();
-            Mat imagen(copia.height(), copia.width(),CV_8UC4, copia.bits());
-            crear_nueva(primera_libre(),imagen);
+            Mat imagen(image.height(), image.width(),CV_8UC4, image.bits());
+            //Hacemos la conversión de 4 a 3 canales para poder ser usada en funcionalidades futuras
+            //(como ecualización del histograma)
+            cvtColor(imagen,imagen,COLOR_BGRA2BGR);
+            Mat copia= imagen.clone();
+            crear_nueva(primera_libre(),copia);
         }
     }
 }
@@ -508,12 +511,14 @@ void MainWindow::on_actionSelecci_n_a_cortapapeles_triggered()
 {
     QClipboard *clipboard = QApplication::clipboard();
     //comprobamos que la imagen este activa y haya alguna posicion libre en el array de imagenes.
-    if(foto_activa()){
+    if(foto_activa()!=-1){
         int num=foto_activa();
         //obtnemos la zona seleccionada
         Mat roi = foto[num].img(foto[num].roi).clone();
-        QImage image( roi.data, roi.cols, roi.rows, QImage::Format_RGB32);
-        clipboard->setImage(image);
+        cvtColor(roi,roi,COLOR_BGR2BGRA);
+        QImage image(roi.data, roi.cols, roi.rows, QImage::Format_ARGB32);
+        QImage copia= image.copy();
+        clipboard->setImage(copia);
     }
 }
 
@@ -544,6 +549,35 @@ void MainWindow::on_actionConvertir_a_color_falso_triggered()
     if(foto_activa()!= -1 && primera_libre()!=-1){
         falsocolor fc(foto_activa());
         fc.exec();
+    }
+}
+
+void MainWindow::on_actionRojo_Verde_Azul_triggered()
+{
+    if(foto_activa()!= -1 && primera_libre()!=-1){
+        RojoVerdeAzul rgb(foto_activa());
+        rgb.exec();
+    }
+}
+
+void MainWindow::on_actionEcualizaci_n_del_histograma_triggered()
+{
+    if(foto_activa()!= -1 && primera_libre()!=-1){
+        ver_ecualizacion_histograma(foto_activa(),1);
+        ver_ecualizacion_histograma(foto_activa(),0);
+    }
+}
+
+
+void MainWindow::on_actionMinima_Maxima_triggered()
+{
+    if(primera_libre()!=-1){
+        QString nombre=QFileDialog::getOpenFileName();
+        if(!nombre.isEmpty()){
+            MinimoMaximo mm(nombre, primera_libre());
+            if(mm.isOpened())
+                mm.exec();
+        }
     }
 }
 

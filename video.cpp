@@ -188,3 +188,26 @@ void movimiento (String nombre, int framei, int framef, int nres)
 }
 
 //---------------------------------------------------------------------------
+
+void minima_maxima(String nombre, int framei, int framef){
+    VideoCapture cap(nombre);
+     if(cap.isOpened()) {
+         cap.set(CAP_PROP_POS_FRAMES, framei); //nos situamos en el principio del vídeo.
+         Mat frame, minima,maxima;
+         if(cap.read(frame)){
+             int pos=framei+1;
+             frame.copyTo(minima);
+             frame.copyTo(maxima);
+             while(cap.read(frame) && pos<=framef && waitKey(1)==-1){
+                    pos++;
+                    min(minima,frame,minima);
+                    max(maxima,frame,maxima);
+
+             }
+             crear_nueva(primera_libre(),minima);
+             crear_nueva(primera_libre(),maxima);
+
+         }
+
+     }
+}
