@@ -629,3 +629,24 @@ void MainWindow::on_actionModelos_de_color_triggered()
         mc.exec();
     }
 }
+
+void MainWindow::on_actionR_G_triggered()
+{
+    if(foto_activa()!= -1 && primera_libre()!=-1){
+        ver_histograma_bidimensional(foto_activa(), primera_libre(), 0);
+    }
+}
+
+void MainWindow::on_actionR_B_triggered()
+{
+    if(foto_activa()!= -1 && primera_libre()!=-1){
+        ver_histograma_bidimensional(foto_activa(), primera_libre(), 1);
+    }
+}
+
+void MainWindow::on_actionG_B_triggered()
+{
+    if(foto_activa()!= -1 && primera_libre()!=-1){
+        ver_histograma_bidimensional(foto_activa(), primera_libre(), 2);
+    }
+}

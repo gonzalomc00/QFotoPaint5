@@ -210,6 +210,10 @@ QString ver_informacion_imagen(int nfoto, int tipo);
 void cambiar_modelo_color(int nfoto, int tipo, bool guardar = false);
 //Aplica transformaciones del modelo de color de nfoto al tipo que corresponda
 
+void ver_histograma_bidimensional (int nfoto, int nres, int tipo);
+//Seleccionamos con el tipo el tipo de histograma que queremos ver (R-G, R-B, G-B)
+
+
 string Lt1(string cadena);
 // Convertir una cadena de UTF8 a Latin1
 

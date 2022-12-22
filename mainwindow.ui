@@ -441,11 +441,19 @@ p, li { white-space: pre-wrap; }
      <property name="title">
       <string>Ver histograma</string>
      </property>
+     <widget class="QMenu" name="menuBidimensional">
+      <property name="title">
+       <string>Bidimensional</string>
+      </property>
+      <addaction name="actionR_G"/>
+      <addaction name="actionR_B"/>
+      <addaction name="actionG_B"/>
+     </widget>
      <addaction name="actionGrises"/>
      <addaction name="actionRojo"/>
      <addaction name="actionVerde"/>
      <addaction name="actionAzul"/>
-     <addaction name="actionBidimensional"/>
+     <addaction name="menuBidimensional"/>
     </widget>
     <addaction name="actionSeleccionar_todo"/>
     <addaction name="actionCopiar_a_nueva"/>
@@ -819,14 +827,24 @@ p, li { white-space: pre-wrap; }
     <string>Ver información</string>
    </property>
   </action>
-  <action name="actionBidimensional">
-   <property name="text">
-    <string>Bidimensional</string>
-   </property>
-  </action>
   <action name="actionModelos_de_color">
    <property name="text">
     <string>Modelos de color</string>
+   </property>
+  </action>
+  <action name="actionR_G">
+   <property name="text">
+    <string>R-G</string>
+   </property>
+  </action>
+  <action name="actionR_B">
+   <property name="text">
+    <string>R-B</string>
+   </property>
+  </action>
+  <action name="actionG_B">
+   <property name="text">
+    <string>G-B</string>
    </property>
   </action>
  </widget>

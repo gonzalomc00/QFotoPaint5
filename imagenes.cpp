@@ -1257,6 +1257,48 @@ void cambiar_modelo_color(int nfoto, int tipo, bool guardar){
     }
 }
 
+//-------------------------------------------------------
+void ver_histograma_bidimensional (int nfoto, int nres, int tipo){
+    Mat imagen = foto[nfoto].img;
+    Mat hist;
+    int canales[2];
+    switch (tipo)
+    {
+    case 0:{
+        canales[0] = 2; //R
+        canales[1] = 1; //G
+        break;
+    }
+    case 1:{
+        canales[0] = 2; //R
+        canales[1] = 0; //B
+        break;
+    }
+    case 2:{
+        canales[0] = 1; //G
+        canales[1] = 0; //B
+        break;
+    }
+    }
+    int bins[2]= {64, 64};
+    float rango[2]= {0, 256};
+    const float *rangos[]= {rango, rango};
+    calcHist(&imagen, 1, canales, noArray(), hist, 2, bins, rangos);
+
+    // Operaciones para pintar el histograma
+
+    Mat pinta(64, 64, CV_8UC1);
+    double minval, maxval;
+    minMaxLoc(hist, &minval, &maxval); // Para escalar el color entre blanco y negro
+
+    for (int r= 0; r<64; r++)
+        for (int g= 0; g<64; g++)
+            pinta.at<uchar>(r, g)= 255-255*hist.at<float>(r, g)/maxval;
+
+    crear_nueva(nres, pinta);
+}
+
+
 string Lt1(string cadena)
 {
     QString temp= QString::fromUtf8(cadena.c_str());
