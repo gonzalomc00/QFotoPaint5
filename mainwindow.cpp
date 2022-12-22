@@ -34,6 +34,7 @@ using namespace cv;
 #include "minimomaximo.h"
 #include "ecualizarhistograma.h"
 #include "detectarcarasvideo.h"
+#include "detectarcaras.h"
 
 QString FiltroImagen = "Todos los formatos (*.jpg *.jpeg *.jpe .jp2 *.tif *.tiff *.png *.gif *.bmp *.dib *.webp *.ppm);;Archivos JPG (*.jpg *.jpeg *.jpe);;Archivos TIF (*.tif *.tiff);;Archivos PNG (*.png);;Archivos GIF (*.gif);;Archivos BMP (*.bmp *.dib);;Otros (*.*)";
 
@@ -580,11 +581,9 @@ void MainWindow::on_actionMinima_Maxima_triggered()
 
 void MainWindow::on_actionCaras_triggered()
 {
+    DetectarCaras dc(this);
+    dc.exec();
 
-    QString nombre=QFileDialog::getOpenFileName();
-    if(!nombre.isEmpty()){
-    ver_caras(nombre.toLatin1().data());
-    }
 }
 
 void MainWindow::on_actionDetectar_cara_a_v_deo_triggered()
