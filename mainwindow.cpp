@@ -34,6 +34,7 @@ using namespace cv;
 #include "minimomaximo.h"
 #include "ecualizarhistograma.h"
 #include "detectarcarasvideo.h"
+#include "detectarcaras.h"
 #include "rotarcualquiera.h"
 #include "ver_informacion.h"
 #include "modelos_color.h"
@@ -588,11 +589,9 @@ void MainWindow::on_actionMinima_Maxima_triggered()
 
 void MainWindow::on_actionCaras_triggered()
 {
+    DetectarCaras dc(this);
+    dc.exec();
 
-    QString nombre=QFileDialog::getOpenFileName();
-    if(!nombre.isEmpty()){
-    ver_caras(nombre.toLatin1().data());
-    }
 }
 
 void MainWindow::on_actionDetectar_cara_a_v_deo_triggered()

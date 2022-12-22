@@ -45,7 +45,7 @@ void minima_maxima(String nombre, int framei, int framef);
 void ver_caras_video(String nombre);
 //Permite señalar con un rectángulo las caras encontradas en un vídeo, generando un vídeo.
 
-void ver_caras(String nombre);
+void ver_caras(String nombre,bool guardar);
 //Permite crear una imagen con las caras encontradas en un vídeo.
 
 

@@ -4,6 +4,7 @@
 #include <math.h>
 #include <QtDebug>
 #include <QFileDialog>
+#include <QMessageBox>
 #include "string.h"
 
 ///////////////////////////////////////////////////////////////////
@@ -265,12 +266,13 @@ void ver_caras_video(String nombre){
 
 }
 
-void ver_caras(String nombre){
+void ver_caras(String nombre, bool guardar){
     VideoCapture cap(nombre);
     CascadeClassifier cascade("C:/OpenCV/OpenCV4.6.0G/data/haarcascades/haarcascade_frontalface_alt.xml");
     std::vector<Rect> caras;
     std::vector<Mat> imagenes_caras;
     Mat img,res,temp;
+
 
 
 
@@ -287,7 +289,7 @@ void ver_caras(String nombre){
 
     }
 
-    //Calculamos el area de imagen que debemos rellenar.
+    //Calculamos el número de filas que debemos rellenar.
     int num_images = std::ceil(std::sqrt(imagenes_caras.size()));
 
     //Array de filas
@@ -318,8 +320,13 @@ void ver_caras(String nombre){
 
     vconcat(filas,res);
 
+    if(guardar){
+        crear_nueva(primera_libre(),res);
+    }
+    else{
     namedWindow("Imagen", WINDOW_NORMAL);
     imshow("Imagen",res);
+    }
 
 
 }
