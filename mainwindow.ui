@@ -490,6 +490,7 @@ p, li { white-space: pre-wrap; }
     <addaction name="actionConvertir_a_color_falso"/>
     <addaction name="actionRojo_Verde_Azul"/>
     <addaction name="actionEcualizaci_n_del_histograma"/>
+    <addaction name="actionModelos_de_color"/>
    </widget>
    <widget class="QMenu" name="menuEfectos">
     <property name="title">
@@ -821,6 +822,11 @@ p, li { white-space: pre-wrap; }
   <action name="actionBidimensional">
    <property name="text">
     <string>Bidimensional</string>
+   </property>
+  </action>
+  <action name="actionModelos_de_color">
+   <property name="text">
+    <string>Modelos de color</string>
    </property>
   </action>
  </widget>

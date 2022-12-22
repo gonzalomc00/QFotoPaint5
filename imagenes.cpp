@@ -1216,10 +1216,46 @@ QString ver_informacion_imagen(int nfoto, int tipo){
 
 }
 
-
-
 //---------------------------------------------------------------------------
 
+void cambiar_modelo_color(int nfoto, int tipo, bool guardar){
+    Mat imagen = foto[nfoto].img;
+    Mat res;
+
+    //Cambiamos del modelo BGR a los distintos tipos
+    switch(tipo){
+    case 0:
+        //HLS
+        cvtColor(imagen,res,COLOR_BGR2HLS);
+        break;
+
+    case 1:
+        //HSV
+        cvtColor(imagen,res,COLOR_BGR2HSV);
+        break;
+
+    case 2:
+        //XYZ
+        cvtColor(imagen,res,COLOR_BGR2XYZ);
+        break;
+
+     case 3:
+        //YUV
+        cvtColor(imagen,res,COLOR_BGR2YUV);
+        break;
+     case 4:
+        //GRAY
+        cvtColor(imagen,res,COLOR_BGR2GRAY);
+        break;
+    }
+
+    if(guardar){
+        crear_nueva(primera_libre(),res);
+    }
+    else{
+        imshow("Modelo Color",res);
+    }
+}
 
 string Lt1(string cadena)
 {

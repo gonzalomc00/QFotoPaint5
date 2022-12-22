@@ -207,6 +207,9 @@ QString ver_informacion_imagen(int nfoto, int tipo);
 // Devuelve la informacion de nfoto segun el tipo que se requiera
 
 
+void cambiar_modelo_color(int nfoto, int tipo, bool guardar = false);
+//Aplica transformaciones del modelo de color de nfoto al tipo que corresponda
+
 string Lt1(string cadena);
 // Convertir una cadena de UTF8 a Latin1
 

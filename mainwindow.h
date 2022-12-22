@@ -91,6 +91,7 @@ private slots:
     void on_actionDetectar_cara_a_v_deo_triggered();
     void on_actionBidimensional_triggered();
     void on_actionVer_informaci_n_triggered();
+    void on_actionModelos_de_color_triggered();
 };
 
 extern MainWindow *w;
