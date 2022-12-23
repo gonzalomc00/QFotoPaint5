@@ -166,7 +166,9 @@ void ver_histograma(int nfoto, int nres, int canal);
 // Seleccionamos con canal el tipo de histograma que queremos ver (rojo,verde,azul...)
 
 void ver_bajorrelieve(int nfoto, double angulo, double grado, int fondo,
-                      bool guardar=false); //por defecto el guardar esta a falso
+                      bool guardar=false);
+//por defecto el guardar esta a falso
+//grado valor por el cual multiplicamos el filtro de sobel, textura de fondo
 
 void ver_ajuste_lineal(int nfoto, double pmin, double pmax,
                        bool guardar=false);
@@ -210,9 +212,9 @@ QString ver_informacion_imagen(int nfoto, int tipo);
 void cambiar_modelo_color(int nfoto, int tipo, bool guardar = false);
 //Aplica transformaciones del modelo de color de nfoto al tipo que corresponda
 
-void ver_histograma_bidimensional (int nfoto, int nres, int tipo);
+void ver_histograma_bidimensional (int nfoto, int nres, int tipo, int celdas, bool guardar = false);
 //Seleccionamos con el tipo el tipo de histograma que queremos ver (R-G, R-B, G-B)
-
+//con el numero de celdas del histograma (32x32, 64x64, 256x256)
 
 string Lt1(string cadena);
 // Convertir una cadena de UTF8 a Latin1

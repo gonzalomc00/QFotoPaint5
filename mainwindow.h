@@ -92,9 +92,7 @@ private slots:
     void on_actionBidimensional_triggered();
     void on_actionVer_informaci_n_triggered();
     void on_actionModelos_de_color_triggered();
-    void on_actionR_G_triggered();
-    void on_actionR_B_triggered();
-    void on_actionG_B_triggered();
+
 };
 
 extern MainWindow *w;

@@ -12,7 +12,7 @@ class rotarcualquiera : public QDialog
     Q_OBJECT
 
 public:
-    explicit rotarcualquiera(int foto, QWidget *parent = nullptr);
+    explicit rotarcualquiera(int numfoto, QWidget *parent = nullptr);
     ~rotarcualquiera();
 
 private slots:

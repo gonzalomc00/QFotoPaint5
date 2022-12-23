@@ -9,6 +9,8 @@
 #include <assert.h>
 
 
+
+
 ///////////////////////////////////////////////////////////////////
 /////////  VARIABLES GLOBALES                        //////////////
 ///////////////////////////////////////////////////////////////////
@@ -771,26 +773,30 @@ void ver_bajorrelieve(int nfoto, double angulo, double grado, int fondo,
     QImage imq= QImage(nombres[fondo]);
     Mat imgfondo(imq.height(),imq.width(),CV_8UC4,imq.scanLine(0));
     cvtColor(imgfondo, imgfondo, COLOR_RGBA2RGB);
-    resize(imgfondo,imgfondo,foto[nfoto].img.size());
+    resize(imgfondo,imgfondo,foto[nfoto].img.size()); //reescalado
 
     //Convertimos la imagen a gris, le pasamos el filtro de sobel
     Mat gris; //imagen original
     cvtColor(foto[nfoto].img, gris,COLOR_BGR2GRAY);
+
+    //Rotamos la imagen en gris (para cambiar la direccion)
     Mat rotada;
-    rotar_angulo(gris,rotada,angulo,1.0,1); //rotamos un trozo de la imagen sobre la original??
+    rotar_angulo(gris,rotada,angulo,1.0,1);//al calcular la derivada en x, se pierde un trozo; con el modo 1, la imagen se aumenta para que quepa entera en la imagen rotada
+
+
     Mat sobel;
     //tenemos que
-    Sobel(rotada,sobel,CV_8U,1,0,3,grado, 128);
-    rotar_angulo(sobel, rotada,-angulo,1.0,0);
+    Sobel(rotada, sobel, CV_8U, 1, 0, 3, grado, 128, BORDER_REFLECT); //border reflect: reflejar de lo que queda dentro
+    rotar_angulo(sobel, rotada, -angulo, 1.0, 0);
     gris= rotada(Rect((rotada.cols-gris.cols)/2,(rotada.rows-gris.rows)/2,gris.cols,gris.rows));
 
 
     Mat array[3]={gris,gris,gris};
     Mat res;
     merge(array,3,res);
-    addWeighted(imgfondo,1.0,res,1.0,-128, res);
 
-    imshow("Bajorrelieve",res);
+    addWeighted(imgfondo, 1.0, res , 1.0, -128, res);
+
     if(guardar){
         crear_nueva(primera_libre(),res);
     }
@@ -1124,8 +1130,10 @@ void ver_ecualizacion_histograma(int nfoto, int modo, bool guardar){
 QString ver_informacion_imagen(int nfoto, int tipo){
 
     Mat imagen= foto[nfoto].img;
+
     QString valor;
     Scalar media_color = mean(imagen);
+    int canales = imagen.channels();
 
     switch(tipo){
     case 0:
@@ -1137,7 +1145,7 @@ QString ver_informacion_imagen(int nfoto, int tipo){
     case 1:
     {
         //número de canales
-        valor = QString::number(imagen.channels());
+        valor = QString::number(canales);
         break;
     }
     case 2:
@@ -1189,28 +1197,45 @@ QString ver_informacion_imagen(int nfoto, int tipo){
         break;
     }
     case 5: {
-        //media color
-        double media_imagen = (media_color[0] + media_color[1] + media_color[2]) / 3;
-        //BGR
-        double mediaRojo = media_color[2];
-        double mediaVerde = media_color[1];
-        double mediaAzul = media_color[0];
+        //comprobamos el numero de canales y el tipo de datos de la imagen siendo este RGB (CV_8UC3)
 
-        valor = QString("Color medio de la imagen: %1 \nColor Rojo: %2 \nColor Verde: %3 \nColor Azul: %4 ").arg(media_imagen).arg(mediaRojo).arg(mediaVerde).arg(mediaAzul);
+        if (canales == 3 && imagen.type() == CV_8UC3) {
+                   double media_imagen = (media_color[0] + media_color[1] + media_color[2]) / 3;
+                   //BGR
+                   double mediaRojo = media_color[2];
+                   double mediaVerde = media_color[1];
+                   double mediaAzul = media_color[0];
+
+                   valor = QString("Color medio de la imagen: %1 \nColor Rojo: %2 \nColor Verde: %3 \nColor Azul: %4 ").arg(media_imagen).arg(mediaRojo).arg(mediaVerde).arg(mediaAzul);
+               }
+
+                else if (canales == 1){
+            valor = QString("Valor medio de la imagen: %1 ").arg(media_color[0]);
+
+        }
+
         break;
     }
     case 6:{
+
+        if(canales == 3 && imagen.type() == CV_8UC3){
         //estilo color
            QColor color = QColor(media_color[2],media_color[1],media_color[0]);
            valor= "background-color: rgb(";
            valor+= QString::number(color.red())+",";
            valor+= QString::number(color.green())+",";
            valor+= QString::number(color.blue())+")";
+
+        } else if (canales == 1) {
+            valor= "background-color: gray(";
+            valor+= QString::number((int)round(media_color[0]))+")";
+        }
+    }
         break;
     }
 
 
-    }
+
 
       return valor;
 
@@ -1258,7 +1283,7 @@ void cambiar_modelo_color(int nfoto, int tipo, bool guardar){
 }
 
 //-------------------------------------------------------
-void ver_histograma_bidimensional (int nfoto, int nres, int tipo){
+void ver_histograma_bidimensional (int nfoto, int nres, int tipo, int celdas, bool guardar){
     Mat imagen = foto[nfoto].img;
     Mat hist;
     int canales[2];
@@ -1280,22 +1305,26 @@ void ver_histograma_bidimensional (int nfoto, int nres, int tipo){
         break;
     }
     }
-    int bins[2]= {64, 64};
+    int bins[2]= {celdas, celdas};
     float rango[2]= {0, 256};
     const float *rangos[]= {rango, rango};
     calcHist(&imagen, 1, canales, noArray(), hist, 2, bins, rangos);
 
     // Operaciones para pintar el histograma
 
-    Mat pinta(64, 64, CV_8UC1);
+    Mat pinta(celdas, celdas, CV_8UC1);
     double minval, maxval;
     minMaxLoc(hist, &minval, &maxval); // Para escalar el color entre blanco y negro
 
-    for (int r= 0; r<64; r++)
-        for (int g= 0; g<64; g++)
+    for (int r= 0; r<celdas; r++)
+        for (int g= 0; g<celdas; g++)
             pinta.at<uchar>(r, g)= 255-255*hist.at<float>(r, g)/maxval;
 
-    crear_nueva(nres, pinta);
+    if (guardar){
+      crear_nueva(nres, pinta);
+     } else {
+      imshow("Histograma Bidimensional", pinta);
+     }
 }
 
 

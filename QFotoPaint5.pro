@@ -22,6 +22,7 @@ SOURCES += main.cpp\
     detectarcarasvideo.cpp \
     ecualizarhistograma.cpp \
     falsocolor.cpp \
+    histogramabidimensional.cpp \
     mainwindow.cpp \
     imagenes.cpp \
     dialognueva.cpp \
@@ -51,6 +52,7 @@ HEADERS  += mainwindow.h \
     detectarcarasvideo.h \
     ecualizarhistograma.h \
     falsocolor.h \
+    histogramabidimensional.h \
     imagenes.h \
     dialognueva.h \
     brillocontraste.h \
@@ -81,6 +83,7 @@ FORMS    += mainwindow.ui \
     brillocontraste.ui \
     ecualizarhistograma.ui \
     falsocolor.ui \
+    histogramabidimensional.ui \
     matsatlum.ui \
     minimomaximo.ui \
     modelos_color.ui \
