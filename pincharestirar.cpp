@@ -2,7 +2,7 @@
 #include "ui_pincharestirar.h"
 #include "imagenes.h"
 
-//como vamos a necesitar hacer uso de un callback no se definen los parametros estos como atributos.
+//De forma que el callback pueda acceder a estos parámetros se declaran como variables globales.
 int nfoto;
 int cx,cy;
 double radio_efecto,grado_efecto;
@@ -28,7 +28,7 @@ PincharEstirar::PincharEstirar(int numfoto,QWidget *parent) :
     radio_efecto=ui->horizontalSlider->value();
     grado_efecto=radio_efecto*radio_efecto*ui->horizontalSlider_2->value()/1000.0;
     ver_pinchar_estirar(nfoto,cx,cy,radio_efecto,grado_efecto);
-    //establecemos que el callback esté en esta ventana
+    // A la ventana le asignamos el callback que hemos creado
     setMouseCallback("Pinchar/estirar",cb_pincharestirar);
 }
 
