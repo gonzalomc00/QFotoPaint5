@@ -729,17 +729,18 @@ void ver_histograma(int nfoto, int nres, int canal){
     const float *rangos[]= {rango};
     double vmin, vmax;
 
-    //primero calculamos el histograma y luego calculamos el maximo y el minimo
+
     if(canal==3){
     calcHist(&gris, 1, canales, noArray(), hist, 1, bins, rangos);
     } else{
-        //TERMINAR
         calcHist(&(foto[nfoto].img), 1, &canal, noArray(), hist, 1, bins, rangos);
     }
-    minMaxLoc(hist, &vmin, &vmax);
+    minMaxLoc(hist, &vmin, &vmax); //función que calcula el mínimo y el máximo del histograma de forma que el histograma se escale en torno a estos valores
 
     for (int i= 0; i<256; i++){
+        //escalamos el histograma y le damos la vuelta
         float poshist=185-hist.at<float>(i)/vmax*182;
+        //ensanchamos el histograma a lo largo del eje x y lo dibujamos
         rectangle(imghist,Point(3+i*391.0/256,185),Point(3+(i+1)*391.0/256,poshist), CV_RGB(canal==2?255:0,canal==1?255:0,canal==0?255:0),-1);
     }
 
@@ -757,9 +758,9 @@ void ver_bajorrelieve(int nfoto, double angulo, double grado, int fondo,
                        ":/imagenes/gris.png",":/imagenes/madera.jpg"};
 
 
-    //reescalamos la imagen del fondo para que lo ocupe entero
 
     //dependiendo del parametro fondo se va escogiendo una foto u otra
+    //es necesario reescalar la imagen.
     QImage imq= QImage(nombres[fondo]);
     Mat imgfondo(imq.height(),imq.width(),CV_8UC4,imq.scanLine(0));
     cvtColor(imgfondo, imgfondo, COLOR_RGBA2RGB);
@@ -769,11 +770,13 @@ void ver_bajorrelieve(int nfoto, double angulo, double grado, int fondo,
     Mat gris; //imagen original
     cvtColor(foto[nfoto].img, gris,COLOR_BGR2GRAY);
     Mat rotada;
-    rotar_angulo(gris,rotada,angulo,1.0,1); //rotamos un trozo de la imagen sobre la original??
+    //rotamos la imagen de manera que podamos calcular la derivada en cualquier angulo
+    rotar_angulo(gris,rotada,angulo,1.0,1);
     Mat sobel;
-    //tenemos que
     Sobel(rotada,sobel,CV_8U,1,0,3,grado, 128);
+    //tras aplicar el filtro de Sobel, devolvemos la imagen al angulo original
     rotar_angulo(sobel, rotada,-angulo,1.0,0);
+    //Para eliminar el borde exterior, recortamos la imagen, de forma que solo obtengamos la parte util de esta.
     gris= rotada(Rect((rotada.cols-gris.cols)/2,(rotada.rows-gris.rows)/2,gris.cols,gris.rows));
 
 
@@ -822,8 +825,6 @@ void ver_rotar_cualquiera(int nfoto, int angulo, double escala, bool guardar){
 //---------------------------------------------------------------------------
 void ver_ajuste_lineal(int nfoto, double pmin, double pmax, bool guardar){
 
-//Cogemos la imagen, la convertimos a gris, calculamos el histograma, calculamos los percentiles y luego
-//hacemos la operación de estiramiento lineal.
     Mat gris;
     cvtColor(foto[nfoto].img,gris,COLOR_BGR2GRAY);
     int canales[1]={0};
@@ -834,29 +835,31 @@ void ver_ajuste_lineal(int nfoto, double pmin, double pmax, bool guardar){
     calcHist(&gris,1,canales,noArray(),hist,1,bins,rangos);
 
 
-    //escala el histograma de forma que los valores del histograma sumen en total 100
+    //Escala los valores del histograma entre 0 y 100.
     normalize(hist,hist, 100, 0, NORM_L1);
 
     double acum=0;
     int vmin=0;
 
+    //Calculamos el percentil mínimo
     for(;vmin<256 && acum<pmin;vmin++)
         acum+=hist.at<float>(vmin);
 
     acum=0;
 
-    //cuando acum llega al percentil, entonces se para creo. vmax almacena el valor máximo en el lado derecho
-    //obteniendo el pixel que se encuentra justo en el percentil indicado o algo de eso.
+    //Calculamos el percentil máximo
     int vmax=255;
     for(; vmax>=0 && acum<pmax; vmax--)
         acum+=hist.at<float>(vmax);
 
-    //condiciones para evitar que al estirar el histograma haya problemas. Vmin tiene que ser menor que vmax
+    //Corregimos el valor de los percentiles en caso de que sea necesario
     if(vmin>=vmax) vmax=vmin+1;
+    //Calculamos los valores de a y b
     double a= 255.0/(vmax-vmin);
     double b= -vmin*a;
 
     Mat res;
+    //Estiramos el histograma
     foto[nfoto].img.convertTo(res,CV_8U,a,b);
     imshow(foto[nfoto].nombre,res);
     if(guardar){
@@ -869,22 +872,20 @@ void ver_ajuste_lineal(int nfoto, double pmin, double pmax, bool guardar){
 //---------------------------------------------------------------------------
 
 void escala_color(int nfoto, int nres){
-    //MEJORA: fijar la parte donde se corta segun el valor de gris del color objetivo.
 
     Mat gris;
     cvtColor(foto[nfoto].img,gris,COLOR_BGR2GRAY);
-    //pasamos la imagen gris a "BGR" para triplicar los canales de color.
+    //Convertimos la imagen de gris a RGB de manera que tripliquemos el canal gris
     cvtColor(gris,gris,COLOR_GRAY2BGR);
 
-    //creamos la tabla LUT con tres canales de 8 bits cada uno.
+    //Creamos una tabla LUT que contendrá tres canales de 8 bits cada uno
     Mat lut(1,256,CV_8UC3);
     int vb=color_pincel.val[0]; //color azul del pincel
-    int vg=color_pincel.val[1];
-    int vr=color_pincel.val[2];
+    int vg=color_pincel.val[1]; //color verde del pincel
+    int vr=color_pincel.val[2]; //color rojo del pincel
+    //Calculamos los valores de la escala del nuevo color
     for(int A=0;A<256;A++){
-        //Cada posición de la tabla tendrá los tres valores
         if(A<128){
-            //aqui estamos modificando el color azul
             lut.at<Vec3b>(A)= Vec3b(vb*A/128, vg*A/128, vr*A/128);
         }
         else {
@@ -895,8 +896,8 @@ void escala_color(int nfoto, int nres){
     }
 
     Mat res;
+    //Transformamos la imagen gris al color deseado
     LUT(gris,lut,res);
-    //creamos en la posición nres la imagen res
     crear_nueva(nres,res);
 
 }
@@ -904,18 +905,23 @@ void escala_color(int nfoto, int nres){
 //---------------------------------------------------------------------------
 void ver_pinchar_estirar(int nfoto, int cx, int cy, double radio, double grado,bool guardar)
 {
-    //La imagen de la Gaussiana tiene las mismas dimensiones que la imagen que coge.
-    //Su tipo de datos ahora será real
+    //Copiamos la imagen de forma que ahora tengamos datos de tipo real.
     Mat S(foto[nfoto].img.rows,foto[nfoto].img.cols,CV_32FC1);
+
     for(int y=0; y<S.rows;y++){
         for(int x=0;x<S.cols;x++)
+            //Cálculo de los valores de la superficie deformante
             S.at<float>(y,x)= exp(-((x-cx)*(x-cx)+(y-cy)*(y-cy))/(radio*radio));
     Mat Gx,Gy;
+    //Calculamos la derivada en X
     Sobel(S,Gx,CV_32F,1,0,3,grado,0,BORDER_REFLECT);
+    //Calculamos la derivada en Y
     Sobel(S,Gy,CV_32F,0,1,3,grado,0,BORDER_REFLECT);
+    //Multiplicamos la superficie por su derivada en X e Y
     multiply(S,Gx,Gx);
     multiply(S,Gy,Gy);
 
+    //Por cada posición de la superficie sumamos los valores a las derivadas.
     for(int y=0; y<S.rows;y++)
         for(int x=0; x<S.cols;x++){
             Gx.at<float>(y,x)+=x;
