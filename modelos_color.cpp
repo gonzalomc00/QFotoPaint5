@@ -8,6 +8,9 @@ modelos_color::modelos_color(int foto,QWidget *parent) :
 {
     ui->setupUi(this);
     nfoto = foto;
+    tipo=0;
+    cambiar_modelo_color(nfoto, tipo);
+
 }
 
 modelos_color::~modelos_color()

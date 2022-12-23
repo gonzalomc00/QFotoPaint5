@@ -30,12 +30,16 @@ void rotarcualquiera::on_dial_valueChanged(int value)
 void rotarcualquiera::on_pushButton_clicked()
 {
    ver_rotar_cualquiera(nfoto,angulo,escala,true);
+   destroyWindow("Rotacion");
+   close();
+
 
 }
 
 void rotarcualquiera::on_pushButton_2_clicked()
 {
     destroyWindow("Rotacion");
+    close();
 
 }
 
@@ -46,15 +50,6 @@ void rotarcualquiera::on_doubleSpinBox_valueChanged(double arg1)
     ver_rotar_cualquiera(nfoto,angulo,escala);
 }
 
-void rotarcualquiera::on_rotarcualquiera_accepted()
-{
- ver_rotar_cualquiera(nfoto,angulo,escala,true);
-}
 
-void rotarcualquiera::on_rotarcualquiera_rejected()
-{
-    destroyWindow("Rotacion");
-
-}
 
 
