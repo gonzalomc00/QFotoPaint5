@@ -199,21 +199,21 @@ void ver_ecualizacion_histograma(int nfoto,int modo, bool guardar=false);
 //Realizar ecualización conjunta o por canales del histograma de una imagen
 
 
-void ver_rotar_cualquiera(int nfoto,int angulo,double escala,bool guardar = false);
+void ver_rotar_cualquiera(int nfoto, int angulo, double escala,bool guardar = false);
 // Rota la imagen contenida en nfoto, en la cantidad angulo
 // la reescala al tamaaño escala y la almacena en nres.
 // Se trata siempre de una rotación exacta
 //por defecto la escala será a 1 y guardar estado a falso
 
 QString ver_informacion_imagen(int nfoto, int tipo);
-// Devuelve la informacion de nfoto segun el tipo que se requiera
+// Devuelve la informacion de nfoto segun el tipo de informacion que se requiera
 
 
-void cambiar_modelo_color(int nfoto, int tipo, bool guardar = false);
-//Aplica transformaciones del modelo de color de nfoto al tipo que corresponda
+void cambiar_modelo_color(int nfoto, int formato, bool guardar = false);
+//Aplica transformaciones del modelo de color de nfoto al formato que corresponda
 
 void ver_histograma_bidimensional (int nfoto, int nres, int tipo, int celdas, bool guardar = false);
-//Seleccionamos con el tipo el tipo de histograma que queremos ver (R-G, R-B, G-B)
+//Seleccionamos con el tipo de canales del histograma que queremos ver (R-G, R-B, G-B)
 //con el numero de celdas del histograma (32x32, 64x64, 256x256)
 
 string Lt1(string cadena);

@@ -33,7 +33,7 @@ private slots:
 private:
     Ui::modelos_color *ui;
     int nfoto;
-    int tipo;
+    int formato;
 };
 
 #endif // MODELOS_COLOR_H

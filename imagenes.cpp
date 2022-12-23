@@ -684,6 +684,7 @@ void ver_suavizado (int nfoto, int ntipo, int tamx, int tamy, bool guardar)
     //función que se encarga del suavizado y elegimos si guardarla o cancelar
     assert(nfoto>=0 && nfoto<MAX_VENTANAS && foto[nfoto].usada);
     assert(tamx>0 && tamx&1 && tamy>0 && tamy&1);
+
     Mat img= foto[nfoto].img.clone();
     Mat fragmento=img(foto[nfoto].roi);
     //Si el suavizado es de tipo 1 se llama al filtro gaussiano
@@ -692,7 +693,8 @@ void ver_suavizado (int nfoto, int ntipo, int tamx, int tamy, bool guardar)
     else if (ntipo == 2)
         blur(fragmento, fragmento, Size(tamx, tamy));
     else if (ntipo==3)
-        medianBlur(fragmento,fragmento,min(tamx,301));
+        medianBlur(fragmento,fragmento, min(tamx,301)); //si es mayor que 301 le aplicamos ese suavizado para no sobrepasarnos y que de error
+
     imshow(foto[nfoto].nombre, img);
 
     if (guardar) {
@@ -732,17 +734,17 @@ void ver_histograma(int nfoto, int nres, int canal){
     double vmin, vmax;
 
     //primero calculamos el histograma y luego calculamos el maximo y el minimo
-    if(canal==3){
+    if(canal==3){ // calculamos sobre gris
     calcHist(&gris, 1, canales, noArray(), hist, 1, bins, rangos);
     } else{
-        //TERMINAR
+        //calculamos sobre el canal
         calcHist(&(foto[nfoto].img), 1, &canal, noArray(), hist, 1, bins, rangos);
     }
     minMaxLoc(hist, &vmin, &vmax);
 
     for (int i= 0; i<256; i++){
         float poshist=185-hist.at<float>(i)/vmax*182;
-        rectangle(imghist,Point(3+i*391.0/256,185),Point(3+(i+1)*391.0/256,poshist), CV_RGB(canal==2?255:0,canal==1?255:0,canal==0?255:0),-1);
+        rectangle(imghist,Point(3+i*391.0/256,185),Point(3+(i+1)*391.0/256,poshist), CV_RGB(canal==2?255:0,canal==1?255:0,canal==0?255:0),-1); //CV_RGB -> pintar el histograma del color del canal
     }
 
     crear_nueva(nres,imghist);
@@ -828,7 +830,7 @@ void ver_rotar_cualquiera(int nfoto, int angulo, double escala, bool guardar){
 //---------------------------------------------------------------------------
 void ver_ajuste_lineal(int nfoto, double pmin, double pmax, bool guardar){
 
-//Cogemos la imagen, la convertimos a gris, calculamos el histograma, calculamos los percentiles y luego
+//Cogemos la imagen, la convertimos a gris, calculamos el histograma, con el histograma calculamos los percentiles y luego
 //hacemos la operación de estiramiento lineal.
     Mat gris;
     cvtColor(foto[nfoto].img,gris,COLOR_BGR2GRAY);
@@ -910,15 +912,17 @@ void escala_color(int nfoto, int nres){
 //---------------------------------------------------------------------------
 void ver_pinchar_estirar(int nfoto, int cx, int cy, double radio, double grado,bool guardar)
 {
+    //Transformaciones de Mapeo
     //La imagen de la Gaussiana tiene las mismas dimensiones que la imagen que coge.
     //Su tipo de datos ahora será real
-    Mat S(foto[nfoto].img.rows,foto[nfoto].img.cols,CV_32FC1);
-    for(int y=0; y<S.rows;y++){
+    Mat S(foto[nfoto].img.rows,foto[nfoto].img.cols,CV_32FC1); //CV_32FC1 tipo de dato de la gausiana es un tipo de datos real de un canal.
+    for(int y=0; y<S.rows;y++){ //rellenamos la superficie
         for(int x=0;x<S.cols;x++)
             S.at<float>(y,x)= exp(-((x-cx)*(x-cx)+(y-cy)*(y-cy))/(radio*radio));
+
     Mat Gx,Gy;
-    Sobel(S,Gx,CV_32F,1,0,3,grado,0,BORDER_REFLECT);
-    Sobel(S,Gy,CV_32F,0,1,3,grado,0,BORDER_REFLECT);
+    Sobel(S,Gx,CV_32F,1,0,3,grado,0,BORDER_REFLECT); //derivada en x
+    Sobel(S,Gy,CV_32F,0,1,3,grado,0,BORDER_REFLECT); //derivada en y
     multiply(S,Gx,Gx);
     multiply(S,Gy,Gy);
 
@@ -927,6 +931,7 @@ void ver_pinchar_estirar(int nfoto, int cx, int cy, double radio, double grado,b
             Gx.at<float>(y,x)+=x;
             Gy.at<float>(y,x)+=y;
    }
+
     Mat res;
     remap(foto[nfoto].img,res,Gx,Gy,INTER_LINEAR, BORDER_REFLECT);
     imshow("Pinchar/estirar",res);
@@ -1236,12 +1241,12 @@ QString ver_informacion_imagen(int nfoto, int tipo){
 
 //---------------------------------------------------------------------------
 
-void cambiar_modelo_color(int nfoto, int tipo, bool guardar){
+void cambiar_modelo_color(int nfoto, int formato, bool guardar){
     Mat imagen = foto[nfoto].img;
     Mat res;
 
     //Cambiamos del modelo BGR a los distintos tipos
-    switch(tipo){
+    switch(formato){
     case 0:
         //HLS
         cvtColor(imagen,res,COLOR_BGR2HLS);
@@ -1300,6 +1305,7 @@ void ver_histograma_bidimensional (int nfoto, int nres, int tipo, int celdas, bo
         break;
     }
     }
+
     int bins[2]= {celdas, celdas};
     float rango[2]= {0, 256};
     const float *rangos[]= {rango, rango};

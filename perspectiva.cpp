@@ -60,7 +60,8 @@ Perspectiva::Perspectiva(QWidget *parent) :
             ui->listWidget->addItem(QString::fromStdString(foto[i].nombre));
             ui->listWidget_2->addItem(QString::fromStdString(foto[i].nombre));
             corresp[numImg++]=i;
-}
+        }
+
     nfoto1p= corresp[0];
     nfoto2p= foto_activa();
     //si hubiera solo una foto activa, ambos nfoto apuntarían al mismo sitio

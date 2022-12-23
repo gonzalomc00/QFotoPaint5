@@ -10,6 +10,7 @@ suavizados::suavizados(int num_foto, int num_tipo, QWidget *parent) :
     ui->setupUi(this);
     nfoto= num_foto;
     tipo= num_tipo;
+    //desactivamos el callback
     set_callback_foto(nfoto, false);
     //desactivamos botones que no queremos que salgan
     if(tipo==3){
