@@ -100,9 +100,9 @@ FORMS    += mainwindow.ui \
     mediadevideo.ui \
     ver_informacion.ui
 
-INCLUDEPATH += "C:\opencv\opencv4.6.0g\OpenCV4.6.0G\include"
+INCLUDEPATH += "C:\OpenCV\OpenCV4.6.0G\include"
 
-LIBS += -L"C:\opencv\opencv4.6.0g\OpenCV4.6.0G\lib"\
+LIBS += -L"C:\OpenCV\OpenCV4.6.0G\lib"\
         -llibopencv_world460
 
 RESOURCES += recursos.qrc

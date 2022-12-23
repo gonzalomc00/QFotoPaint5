@@ -61,6 +61,9 @@ color: rgb(255, 255, 255);</string>
    <property name="text">
     <string>Todos los canales de forma conjunta</string>
    </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
   </widget>
   <widget class="QRadioButton" name="radioButton_2">
    <property name="geometry">

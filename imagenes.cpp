@@ -306,9 +306,7 @@ void cb_punto (int factual, int x, int y)
 
 Scalar ColorArcoIris ()
 {
-    //COMPLETAR CON LO QUE HA HECHO EN CLASE
     static Scalar colorActual=CV_RGB(255,0,0);
-    //Automata que comprueba el estado en el que estamos dependiendo del color
     static int estado=0;
     switch(estado){
         case 0:
@@ -343,12 +341,10 @@ void cb_arcoiris (int factual, int x, int y)
     if (difum_pincel==0)
         circle(im, Point(x, y), radio_pincel, ColorArcoIris(), -1, LINE_AA);
     else {
-        //mejorado para que en lugar de cogr la foto entera, tan solo coja un roi pequeño y funcione mejor
         int tam= radio_pincel+difum_pincel;
         int posx= tam, posy=tam;
         Rect roi(x-tam,y-tam,2*tam+1,2*tam+1);
         if(roi.x<0){
-            //decrementamos del roi lo que se salga
             roi.width+=roi.x;
             posx+=roi.x;
             roi.x=0;
@@ -358,7 +354,7 @@ void cb_arcoiris (int factual, int x, int y)
                posy+=roi.y;
                roi.y=0;
         }
-        //nos salimos por la derecha
+
         if(roi.x+roi.width > im.cols){
             roi.width=im.cols-roi.x;
         }
@@ -368,7 +364,7 @@ void cb_arcoiris (int factual, int x, int y)
         Mat frag=im(roi);
         Mat res(frag.size(), frag.type(), ColorArcoIris());
         Mat cop(frag.size(), frag.type(), CV_RGB(0,0,0));
-        circle(cop, Point(tam, tam), radio_pincel, CV_RGB(255,255,255), -1, LINE_AA);
+        circle(cop, Point(posx, posy), radio_pincel, CV_RGB(255,255,255), -1, LINE_AA);
         blur(cop, cop, Size(difum_pincel*2+1, difum_pincel*2+1));
         multiply(res, cop, res, 1.0/255.0);
         bitwise_not(cop, cop);
@@ -669,9 +665,7 @@ void ver_brillo_contraste (int nfoto, double suma, double prod,double gama, bool
     assert(nfoto>=0 && nfoto<MAX_VENTANAS && foto[nfoto].usada);
     Mat img;
     foto[nfoto].img.convertTo(img, CV_8UC3, prod, suma);
-    //tratatmiento gama
     Mat img32f;
-    //convertimos la imagen que tenemos a 32f
     img.convertTo(img32f,CV_32F,1.0/255);
     pow(img32f,gama,img32f);
     img32f.convertTo(img,CV_8U,255);
@@ -695,11 +689,9 @@ void ver_suavizado (int nfoto, int ntipo, int tamx, int tamy, bool guardar)
     //Si el suavizado es de tipo 1 se llama al filtro gaussiano
     if (ntipo == 1)
         GaussianBlur(fragmento,fragmento, Size(tamx, tamy), 0);
-    //Si no se aplica el filtro blur
     else if (ntipo == 2)
         blur(fragmento, fragmento, Size(tamx, tamy));
     else if (ntipo==3)
-        //aplicamos un limite al suavizado para que no pete. El segundo valor esta puesto un poco al azar.
         medianBlur(fragmento,fragmento,min(tamx,301));
     imshow(foto[nfoto].nombre, img);
 
@@ -827,6 +819,7 @@ void ver_rotar_cualquiera(int nfoto, int angulo, double escala, bool guardar){
 
     if(guardar){
         crear_nueva(primera_libre(),res);
+
     }else{
         imshow("Rotacion",res);
     }
@@ -1275,7 +1268,9 @@ void cambiar_modelo_color(int nfoto, int tipo, bool guardar){
     }
 
     if(guardar){
-        crear_nueva(primera_libre(),res);
+        res.copyTo(foto[nfoto].img);
+        foto[nfoto].modificada= true;
+        mostrar(nfoto);
     }
     else{
         imshow("Modelo Color",res);
