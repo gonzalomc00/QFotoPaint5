@@ -1156,15 +1156,15 @@ QString ver_informacion_imagen(int nfoto, int tipo){
     {
         //memoria ocupada
         int tamanioBytes = 0;
-        if(imagen.isContinuous()){
+        if(imagen.isContinuous()){ // comprobamos si la matriz guarda sus elementos contiguos en memoria
             tamanioBytes = imagen.total() * imagen.elemSize();
         }else{
             tamanioBytes = imagen.step[0] * imagen.rows;
-
         }
         valor = QString("Tamaño en Bytes: %1").arg(tamanioBytes);
         break;
     }
+
     case 3:
     {
         //profundidad
@@ -1202,20 +1202,17 @@ QString ver_informacion_imagen(int nfoto, int tipo){
     }
     case 5: {
         //comprobamos el numero de canales y el tipo de datos de la imagen siendo este RGB (CV_8UC3)
-
         if (canales == 3 && imagen.type() == CV_8UC3) {
                    double media_imagen = (media_color[0] + media_color[1] + media_color[2]) / 3;
                    //BGR
                    double mediaRojo = media_color[2];
                    double mediaVerde = media_color[1];
-                   double mediaAzul = media_color[0];
+                   double mediaAzul = media_color[0]; //B
 
-                   valor = QString("Color medio de la imagen: %1 \nColor Rojo: %2 \nColor Verde: %3 \nColor Azul: %4 ").arg(media_imagen).arg(mediaRojo).arg(mediaVerde).arg(mediaAzul);
-               }
-
-                else if (canales == 1){
-            valor = QString("Valor medio de la imagen: %1 ").arg(media_color[0]);
-
+                   valor = QString("Color medio de la imagen: %1 \nColor Rojo: %2 \nColor Verde: %3 \nColor Azul: %4 ")
+                           .arg(media_imagen).arg(mediaRojo).arg(mediaVerde).arg(mediaAzul);
+        } else if (canales == 1){
+                valor = QString("Color medio de la imagen: %1 ").arg(media_color[0]);
         }
 
         break;
@@ -1230,9 +1227,14 @@ QString ver_informacion_imagen(int nfoto, int tipo){
            valor+= QString::number(color.green())+",";
            valor+= QString::number(color.blue())+")";
 
-        } else if (canales == 1) {
-            valor= "background-color: gray(";
-            valor+= QString::number((int)round(media_color[0]))+")";
+        } else if (canales == 1) {            
+            //valor= "background-color: gray(";
+            //valor+= QString::number((int)round(media_color[0]))+")";
+            QColor color = QColor(media_color[0],media_color[0],media_color[0]);
+            valor= "background-color: rgb(";
+            valor+= QString::number(color.red())+",";
+            valor+= QString::number(color.green())+",";
+            valor+= QString::number(color.blue())+")";
         }
     }
         break;
