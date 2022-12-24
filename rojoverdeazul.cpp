@@ -18,7 +18,6 @@ RojoVerdeAzul::RojoVerdeAzul(int nfoto,QWidget *parent) :
 
     ver_rojo_verde_azul(nfoto,RGB_mult,RGB_sum);
 
-
 }
 
 RojoVerdeAzul::~RojoVerdeAzul()

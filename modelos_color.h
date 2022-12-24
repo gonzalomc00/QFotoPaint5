@@ -12,7 +12,7 @@ class modelos_color : public QDialog
     Q_OBJECT
 
 public:
-    explicit modelos_color(int nfoto, QWidget *parent = nullptr);
+    explicit modelos_color(int numfoto, QWidget *parent = nullptr);
     ~modelos_color();
 
 private slots:
@@ -33,7 +33,7 @@ private slots:
 private:
     Ui::modelos_color *ui;
     int nfoto;
-    int tipo;
+    int formato;
 };
 
 #endif // MODELOS_COLOR_H

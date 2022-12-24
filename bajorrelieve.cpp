@@ -60,6 +60,8 @@ void Bajorrelieve::on_radioButton_4_clicked()
 void Bajorrelieve::on_Bajorrelieve_accepted()
 {
     ver_bajorrelieve(nfoto,angulo,grado,fondo,true);
+    destroyWindow("Bajorrelieve");
+
 
 }
 
@@ -71,9 +73,12 @@ void Bajorrelieve::on_Bajorrelieve_rejected()
 void Bajorrelieve::on_pushButton_clicked()
 {
         ver_bajorrelieve(nfoto,angulo,grado,fondo,true);
+        destroyWindow("Bajorrelieve");
+
 }
 
 void Bajorrelieve::on_pushButton_2_clicked()
 {
      destroyWindow("Bajorrelieve");
 }
+

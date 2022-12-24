@@ -13,7 +13,7 @@ class ver_informacion : public QDialog
     Q_OBJECT
 
 public:
-    explicit ver_informacion(int foto, QWidget *parent = nullptr);
+    explicit ver_informacion(int numfoto, QWidget *parent = nullptr);
     ~ver_informacion();
 
 private slots:

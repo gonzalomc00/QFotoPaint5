@@ -38,6 +38,7 @@ using namespace cv;
 #include "rotarcualquiera.h"
 #include "ver_informacion.h"
 #include "modelos_color.h"
+#include "histogramabidimensional.h"
 
 
 
@@ -432,7 +433,6 @@ void MainWindow::on_actionBajorrelieve_triggered()
 {
     if(foto_activa()!= -1 && primera_libre()!=-1){
         Bajorrelieve b(foto_activa());
-
         b.exec();
     }
 
@@ -631,23 +631,11 @@ void MainWindow::on_actionModelos_de_color_triggered()
     }
 }
 
-void MainWindow::on_actionR_G_triggered()
-{
-    if(foto_activa()!= -1 && primera_libre()!=-1){
-        ver_histograma_bidimensional(foto_activa(), primera_libre(), 0);
-    }
-}
 
-void MainWindow::on_actionR_B_triggered()
+void MainWindow::on_actionBidimensional_triggered()
 {
     if(foto_activa()!= -1 && primera_libre()!=-1){
-        ver_histograma_bidimensional(foto_activa(), primera_libre(), 1);
-    }
-}
-
-void MainWindow::on_actionG_B_triggered()
-{
-    if(foto_activa()!= -1 && primera_libre()!=-1){
-        ver_histograma_bidimensional(foto_activa(), primera_libre(), 2);
+        histogramabidimensional h(foto_activa(), primera_libre());
+        h.exec();
     }
 }

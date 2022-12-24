@@ -37,9 +37,10 @@ private slots:
 
     void on_pushButton_2_clicked();
 
+
 private:
     Ui::Bajorrelieve *ui;
-    int fondo;
+    int fondo; //double ??
     int nfoto;
     double grado;
     double angulo;
