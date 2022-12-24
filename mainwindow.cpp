@@ -452,8 +452,7 @@ void MainWindow::on_actionAjuste_lineal_triggered()
 
 void MainWindow::on_actionCaptura_de_v_deo_triggered()
 {
-    //tenemos la posibilidad de cuando tenemos un cuadro de dialogo de pasarle la extension que queramos para el video.
-    //para que solo pueda pasarse un video con las extensiones especificadas
+
     QString nombre = QFileDialog::getOpenFileName();
     if(!nombre.isEmpty()){
         Capturarvideo cv(nombre);
@@ -501,25 +500,27 @@ void MainWindow::on_actionNueva_desde_portapapeles_triggered()
     int pl= primera_libre();
     if (pl != -1) {
         if (!clipboard->image().isNull()){
+            //Obtenemos la imagen del portapapeles
             QImage image(clipboard->image());
             Mat imagen(image.height(), image.width(),CV_8UC4, image.bits());
-            //Hacemos la conversión de 4 a 3 canales para poder ser usada en funcionalidades futuras
-            //(como ecualización del histograma)
+            //Hacemos la conversión de 4 a 3 canales ya que el formato que utilizan de base
+            //las imagenes que usamos en nuestro programa.
             cvtColor(imagen,imagen,COLOR_BGRA2BGR);
+            //Hacemos la copia profunda de la imagen
             Mat copia= imagen.clone();
+            //Creamos la nueva imagen para poder ser utilizada
             crear_nueva(primera_libre(),copia);
         }
     }
 }
 
-//Tampoco funciona preguntar
 void MainWindow::on_actionSelecci_n_a_cortapapeles_triggered()
 {
     QClipboard *clipboard = QApplication::clipboard();
-    //comprobamos que la imagen este activa y haya alguna posicion libre en el array de imagenes.
+    //Comprobamos que la imagen este activa
     if(foto_activa()!=-1){
         int num=foto_activa();
-        //obtnemos la zona seleccionada
+        //Obtenemos la zona seleccionada
         Mat roi = foto[num].img(foto[num].roi).clone();
         cvtColor(roi,roi,COLOR_BGR2BGRA);
         QImage image(roi.data, roi.cols, roi.rows, QImage::Format_ARGB32);

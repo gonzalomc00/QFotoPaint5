@@ -257,17 +257,14 @@ void cb_close (int factual)
 
 void cb_punto (int factual, int x, int y)
 {
-    Mat im= foto[factual].img;  // Ojo: esto no es una copia, sino a la misma imagen
-    //Si no hay difuminación se escribe directamente en la imagen.
+    Mat im= foto[factual].img;
     if (difum_pincel==0)
         circle(im, Point(x, y), radio_pincel, color_pincel, -1, LINE_AA);
     else {
-        //mejorado para que en lugar de cogr la foto entera, tan solo coja un roi pequeño y funcione mejor
         int tam= radio_pincel+difum_pincel;
         int posx= tam, posy=tam;
         Rect roi(x-tam,y-tam,2*tam+1,2*tam+1);
         if(roi.x<0){
-            //decrementamos del roi lo que se salga
             roi.width+=roi.x;
             posx+=roi.x;
             roi.x=0;
@@ -277,7 +274,6 @@ void cb_punto (int factual, int x, int y)
                posy+=roi.y;
                roi.y=0;
         }
-        //nos salimos por la derecha
         if(roi.x+roi.width > im.cols){
             roi.width=im.cols-roi.x;
         }
@@ -287,14 +283,13 @@ void cb_punto (int factual, int x, int y)
         Mat frag=im(roi);
         Mat res(frag.size(), frag.type(), color_pincel);
         Mat cop(frag.size(), frag.type(), CV_RGB(0,0,0));
-        circle(cop, Point(tam, tam), radio_pincel, CV_RGB(255,255,255), -1, LINE_AA);
+        circle(cop, Point(posx, posy), radio_pincel, CV_RGB(255,255,255), -1, LINE_AA);
         blur(cop, cop, Size(difum_pincel*2+1, difum_pincel*2+1));
         multiply(res, cop, res, 1.0/255.0);
         bitwise_not(cop, cop);
         multiply(frag, cop, frag, 1.0/255.0);
         frag= res + frag;
     }
-    //la imagen completa se sigue mostrando ?
     imshow(foto[factual].nombre, im);
     foto[factual].modificada= true;
 }
@@ -334,8 +329,7 @@ Scalar ColorArcoIris ()
 
 void cb_arcoiris (int factual, int x, int y)
 {
-    Mat im= foto[factual].img;  // Ojo: esto no es una copia, sino a la misma imagen
-    //Si no hay difuminación se escribe directamente en la imagen.
+    Mat im= foto[factual].img;
     if (difum_pincel==0)
         circle(im, Point(x, y), radio_pincel, ColorArcoIris(), -1, LINE_AA);
     else {
@@ -945,24 +939,29 @@ void ver_pinchar_estirar(int nfoto, int cx, int cy, double radio, double grado,b
 
 void ver_matiz_saturacion_luminosidad(int nfoto, int matiz, double satu, double lumi,bool guardar)
 {
-    //Separaremos la imagen de tres canales en tres imagenes de un canal, mediante split.Una vez dividido en los canales
-    // HSL, aplicaremos un filtro diferente a cada uno de ellos. Finalmente, volveremos a juntarlos mediante Merge.
-    // Finalmente la reconvertiremos de HSL a RGB
+
 
     Mat hls;
-    cvtColor(foto[nfoto].img,hls,COLOR_BGR2HLS_FULL); //HSL es un formato que utiliza grados. Mediante full lo convertimos a 255
+    //Transformamos la imagen de RGB a HLS
+    cvtColor(foto[nfoto].img,hls,COLOR_BGR2HLS_FULL);
     Mat canales[3];
     split(hls,canales);
 
     //Realizamos las aplicaciones sobre los canales
-    canales[0].convertTo(canales[0],CV_16S,1,matiz); //hacemos una conversión de profundidad para evitar saturacion?
+    //Aumentamos la profundidad del canal de Matiz para evitar la saturación del canal
+    //y le aplicamos la suma.
+    canales[0].convertTo(canales[0],CV_16S,1,matiz);
+    //Nos quedamos con el byte menos significativo.
     bitwise_and(canales[0],255,canales[0]);
     canales[0].convertTo(canales[0],CV_8U);
+    //Aplicamos las transformaciones sobre los demás canales
     canales[1]*=lumi;
     canales[2]*=satu;
+    //Reunificamos los canales de la imagen en uno solo
     merge(canales,3,hls);
 
     Mat res;
+    //Transformamos la imagen de HLS a BGR
     cvtColor(hls,res,COLOR_HLS2BGR_FULL);
     imshow(foto[nfoto].nombre,res);
     if(guardar){
@@ -978,13 +977,16 @@ void ver_matiz_saturacion_luminosidad(int nfoto, int matiz, double satu, double 
 void ver_perfilado(int nfoto,int tam, double grado, bool guardar)
 {
 
-    //Revisar
     Mat laplace;
+    //Calculamos la Laplaciana
     Laplacian(foto[nfoto].img,laplace, CV_16S,tam,-grado,0,BORDER_REFLECT);
     Mat img16;
+    //Aumentamos la profundidad de la imagen
     foto[nfoto].img.convertTo(img16,CV_16S);
+    //Sumamos la imagen con la Laplaciana
     img16=img16+laplace;
     Mat res;
+    //Devolvemos la imagen a la profundidad original
     img16.convertTo(res,CV_8U);
     imshow(foto[nfoto].nombre,res);
     if(guardar){
@@ -998,10 +1000,11 @@ void ver_perfilado(int nfoto,int tam, double grado, bool guardar)
 
 void ver_perspectiva(int nfoto1, int nfoto2, Point2f pt1[], Point2f pt2[],bool guardar)
 {
-    Mat M= getPerspectiveTransform(pt1,pt2); //matriz que define la transformacion
+    //Obtenemos la matriz para la realizar la transformación perspectiva
+    Mat M= getPerspectiveTransform(pt1,pt2);
 
-    //Vamos a clonar la nfoto2 para el tema de la previsualizacion, pintando sobre ella.
     Mat imres=foto[nfoto2].img.clone();
+    //Aplicamos la transformación
     warpPerspective(foto[nfoto1].img,imres,M,imres.size(), INTER_LINEAR,BORDER_TRANSPARENT);
 
     if(guardar){
@@ -1018,9 +1021,8 @@ void ver_perspectiva(int nfoto1, int nfoto2, Point2f pt1[], Point2f pt2[],bool g
         {
             circle(imres,pt2[i], 8, CV_RGB(0,255,0),-1);
         }
-
+        imshow("Perspectiva",imres);
     }
-    imshow("Perspectiva",imres);
 
 
 
@@ -1031,6 +1033,7 @@ void ver_perspectiva(int nfoto1, int nfoto2, Point2f pt1[], Point2f pt2[],bool g
 void ver_color_falso(int nfoto,int tipo_color, bool guardar){
     Mat img=foto[nfoto].img.clone();
     Mat img_color;
+    //Aplicamos el color falso que se haya introducido
     applyColorMap(img,img_color,tipo_color);
 
     imshow(foto[nfoto].nombre,img_color);

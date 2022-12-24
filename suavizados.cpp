@@ -11,7 +11,6 @@ suavizados::suavizados(int num_foto, int num_tipo, QWidget *parent) :
     nfoto= num_foto;
     tipo= num_tipo;
     set_callback_foto(nfoto, false);
-    //desactivamos botones que no queremos que salgan
     if(tipo==3){
         ui->horizontalSlider_2->setEnabled(false);
         ui->spinBox_2->setEnabled(false);

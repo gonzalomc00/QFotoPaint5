@@ -159,20 +159,24 @@ void movimiento (String nombre, int framei, int framef, int nres)
         Mat frame,frame_ant;
         Mat dif, dif32;
         Mat acum8;
-        if(cap.read(frame)){  //leemos el frame en el que nos situamos
+        if(cap.read(frame)){
             int pos=framei+1;
-            Mat acum(frame.size(),CV_32SC3, Scalar(0,0,0)); //tenemos una imagen de 32 bits con signo de forma que la acumulación no pueda desbordarse.
+            // Utilizamos una imagen de 32 bits y 3 canales para evitar el desbordamiento.
+            Mat acum(frame.size(),CV_32SC3, Scalar(0,0,0));
             frame.copyTo(frame_ant);
 
-            //el siguiente bucle va a ir leyendo los frames y se calcula la diferencia entre el frame en el que estemos
+            //El siguiente bucle va leyendo los frames del video y se calcula la diferencia entre el frame en el que estemos
             //y el anterior. Si se llega al final o no se ha podido leer un frame entonces se para de leer en el bucle.
             while(cap.read(frame) && pos<=framef && waitKey(1)==-1){
                 pos++;
-                absdiff(frame,frame_ant,dif); //almacenamos la diferencia dentro de if.
-                dif.convertTo(dif32, CV_32F); //convertimos la profundidad de la diferencia para poder almacenarse en la diferencia.
-                acum+=dif32; //sumamos dif32 de forma que podamos acumular.
+                //Almacenamos la diferencia dentro de dif.
+                absdiff(frame,frame_ant,dif);
+                //Convertimos la profundidad de la diferencia para poder almacenarse en la acumulacion.
+                dif.convertTo(dif32, CV_32F);
+                acum+=dif32;
 
-                frame.copyTo(frame_ant); //copiamos el frame actual al anterior, de forma que podamos calcular las siguientes diferencias.
+                //Copiamos el frame actual al anterior, de forma que podamos calcular las siguientes diferencias.
+                frame.copyTo(frame_ant);
                 imshow("Video",frame);
                 normalize(acum,acum8,0,255,NORM_MINMAX,CV_8U);
                 imshow("Acumulado",acum8);
@@ -276,13 +280,12 @@ void ver_caras(String nombre, bool guardar){
 
 
 
-
-    //tratamos el resto de frames
+    //Detectamos las caras
     while (cap.read(img) && waitKey(1)==-1) {
            cascade.detectMultiScale(img, caras, 1.2);
            for (int i= 0; i<caras.size(); i++){
                temp=img(caras[i]);
-               cv::resize(temp, temp, Size(50,50), 0, 0, cv::INTER_CUBIC);
+               resize(temp, temp, Size(50,50), 0, 0, INTER_LINEAR);
                 imagenes_caras.push_back(temp);
            }
 
@@ -290,14 +293,14 @@ void ver_caras(String nombre, bool guardar){
     }
 
     //Calculamos el número de filas que debemos rellenar.
-    int num_images = std::ceil(std::sqrt(imagenes_caras.size()));
+    int num_images = ceil(sqrt(imagenes_caras.size()));
 
     //Array de filas
-    std::vector<Mat> filas;
+    vector<Mat> filas;
 
-    for (int i = 0; i <num_images-1; i++) {
+    for (int i = 0; i <num_images; i++) {
         // Crea una fila de imágenes
-        std::vector<Mat> fila;
+        vector<Mat> fila;
         for (int j = i * num_images; j < (i + 1) * num_images; j++) {
           if (j >= imagenes_caras.size()) {
             // Si nos hemos quedado sin imagenes, rellenamos con un cuadrado blanco hasta llegar al final

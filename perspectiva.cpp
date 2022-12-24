@@ -28,23 +28,33 @@ void callback_pers(int evento,int x,int y, int flags, void *num)
 {
     if(flags== EVENT_FLAG_LBUTTON){
     int nimg=(int)num;
-    int vmin=300; //si la distancia es mayor que 300 no movemos el punto
+    //Si la distancia es mayor que 300 no movemos ningún punto
+    int vmin=300;
     int pmin=0;
+
+    //Moveremos un punto de la imagen, siendo este el más cercano al lugar donde hemos hecho clic.
     for(int i=0;i<4;i++){
-        //(x,y) --- ptpers[nimg][i] : comparamos con todos los puntos y vemos con cual hay menos distancia
-        int dact= abs(x-ptpers[nimg][i].x) + abs(y-ptpers[nimg][i].y);//buscamos la minima de estas distancias
-        if(dact<vmin) //si la distancia actual es menor que el minimo movemos
+        //Calculamos la distancia entre el punto donde hemos clic y todos los demás puntos previos
+        int dact= abs(x-ptpers[nimg][i].x) + abs(y-ptpers[nimg][i].y);
+
+        //Si la distancia actual es menor que la mínima, la asignamos como la nueva minima y
+        //almacenamos el índice del punto.
+        if(dact<vmin)
         {
           vmin=dact;
           pmin=i;
         }
     }
+
+    //Si la distancia es menor que 300,movemos el punto y reaplicamos la perspectiva
     if(vmin<300){
         ptpers[nimg][pmin].x=x;
         ptpers[nimg][pmin].y=y;
         ver_perspectiva(nfoto1p,nfoto2p,ptpers[0],ptpers[1]);
+        //Si la imagen es la origen, volvemos a pintar los puntos.
         if(nimg==0)
-            pintar_esquinas();    }
+            pintar_esquinas();
+    }
     }
 }
 
@@ -61,15 +71,17 @@ Perspectiva::Perspectiva(QWidget *parent) :
             ui->listWidget_2->addItem(QString::fromStdString(foto[i].nombre));
             corresp[numImg++]=i;
 }
+    //En el caso de haber una única imagen activa, ambos apuntarían al mismo lugar
     nfoto1p= corresp[0];
     nfoto2p= foto_activa();
-    //si hubiera solo una foto activa, ambos nfoto apuntarían al mismo sitio
 
-    int W1= foto[nfoto1p].img.cols; //ancho
-    int H1= foto[nfoto1p].img.rows; //alto
+    //Ancho y largo de ambas imagenes
+    int W1= foto[nfoto1p].img.cols;
+    int H1= foto[nfoto1p].img.rows;
     int W2= foto[nfoto2p].img.cols;
     int H2= foto[nfoto2p].img.rows;
 
+    //Por defecto los puntos de las imagenes equivalen a sus esquinas
     ptpers[0][0]= Point2f(0,0);
     ptpers[0][1]= Point2f(W1,0);
     ptpers[0][2]= Point2f(W1,H1);

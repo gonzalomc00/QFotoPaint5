@@ -22,7 +22,8 @@ Perfilado::~Perfilado()
 
 void Perfilado::on_horizontalSlider_2_valueChanged(int value)
 {
-    radio=value|1; //ponemos esto para que el valor sea siempre un número par.
+    //De esta forma el valor del radio siempre será par
+    radio=value|1;
     ui->spinBox_2->setValue(value);
     ver_perfilado(nfoto,radio,grado);
 }

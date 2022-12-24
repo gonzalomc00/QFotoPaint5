@@ -88,10 +88,10 @@ color: rgb(255, 255, 255);</string>
   <widget class="QLabel" name="label_2">
    <property name="geometry">
     <rect>
-     <x>60</x>
+     <x>0</x>
      <y>130</y>
-     <width>271</width>
-     <height>16</height>
+     <width>401</width>
+     <height>20</height>
     </rect>
    </property>
    <property name="text">

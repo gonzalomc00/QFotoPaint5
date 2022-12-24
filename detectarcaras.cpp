@@ -20,6 +20,8 @@ DetectarCaras::~DetectarCaras()
 void DetectarCaras::on_pushButton_clicked()
 {
     nombre_fichero=QFileDialog::getOpenFileName();
+    ui->label_2->setText(nombre_fichero);
+    QApplication::processEvents();
 }
 
 void DetectarCaras::on_checkBox_stateChanged(int arg1)
