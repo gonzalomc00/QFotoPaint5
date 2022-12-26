@@ -365,7 +365,7 @@ void cb_arcoiris (int factual, int x, int y)
         multiply(frag, cop, frag, 1.0/255.0);
         frag= res + frag;
     }
-    //la imagen completa se sigue mostrando ?
+
     imshow(foto[factual].nombre, im);
     foto[factual].modificada= true;
 }
@@ -375,7 +375,7 @@ void cb_arcoiris (int factual, int x, int y)
 
 void cb_linea (int factual, int x, int y)
 {
-    Mat im= foto[factual].img;  // Ojo: esto no es una copia, sino a la misma imagen
+    Mat im= foto[factual].img;
     if (difum_pincel==0)
         line(im, Point(downx, downy), Point(x,y), color_pincel, radio_pincel*2+1);
     else {
@@ -422,7 +422,7 @@ void cb_ver_elipse (int factual, int x, int y)
 
 void cb_rectangulo (int factual, int x, int y)
 {
-    Mat im= foto[factual].img;  // Ojo: esto no es una copia, sino a la misma imagen
+    Mat im= foto[factual].img;
     if (difum_pincel==0)
         rectangle(im, Point(downx, downy), Point(x,y), color_pincel, radio_pincel*2-1);
     else {
@@ -445,7 +445,7 @@ void cb_rectangulo (int factual, int x, int y)
 //---------------------------------------------------------------------------
 void cb_elipse (int factual, int x, int y)
 {
-    Mat im= foto[factual].img;  // Ojo: esto no es una copia, sino a la misma imagen
+    Mat im= foto[factual].img;
     if (difum_pincel==0)
         ellipse(im, Point(downx, downy), Size(abs(x-downx),abs(y-downy)),0,0,360, color_pincel, radio_pincel*2-1);
     else {
@@ -579,7 +579,7 @@ void callback (int event, int x, int y, int flags, void *_nfoto)
             ninguna_accion(factual, x, y);
         break;
 
-        // 2.6. Herramienta PUNTO
+        // 2.6. Herramienta ARCOIRIS
      case HER_ARCOIRIS:
             if (flags==EVENT_FLAG_LBUTTON)
                 cb_arcoiris(factual, x, y);
@@ -675,7 +675,6 @@ void ver_brillo_contraste (int nfoto, double suma, double prod,double gama, bool
 
 void ver_suavizado (int nfoto, int ntipo, int tamx, int tamy, bool guardar)
 {
-    //función que se encarga del suavizado y elegimos si guardarla o cancelar
     assert(nfoto>=0 && nfoto<MAX_VENTANAS && foto[nfoto].usada);
     assert(tamx>0 && tamx&1 && tamy>0 && tamy&1);
 
@@ -687,7 +686,7 @@ void ver_suavizado (int nfoto, int ntipo, int tamx, int tamy, bool guardar)
     else if (ntipo == 2)
         blur(fragmento, fragmento, Size(tamx, tamy));
     else if (ntipo==3)
-        medianBlur(fragmento,fragmento, min(tamx,301)); //si es mayor que 301 le aplicamos ese suavizado para no sobrepasarnos y que de error
+        medianBlur(fragmento,fragmento, min(tamx,301));
 
     imshow(foto[nfoto].nombre, img);
 
@@ -1011,7 +1010,7 @@ void ver_perfilado(int nfoto,int tam, double grado, bool guardar)
 
 void ver_perspectiva(int nfoto1, int nfoto2, Point2f pt1[], Point2f pt2[],bool guardar)
 {
-    //Obtenemos la matriz para la realizar la transformación perspectiva
+    //Obtenemos la matriz para realizar la transformación perspectiva
     Mat M= getPerspectiveTransform(pt1,pt2);
 
     Mat imres=foto[nfoto2].img.clone();
@@ -1067,6 +1066,7 @@ void ver_rojo_verde_azul(int nfoto, double valores_mult[], double valores_suma[]
     Mat canales[3];
     split(imres,canales);
 
+    //Modificamos los valores de los canales de la imagen
     canales[0]+=valores_suma[0];
     canales[1]+=valores_suma[1];
     canales[2]+=valores_suma[2];
@@ -1093,6 +1093,7 @@ void ver_rojo_verde_azul(int nfoto, double valores_mult[], double valores_suma[]
 void ver_ecualizacion_histograma(int nfoto, int modo, bool guardar){
 
     Mat res;
+    //Ecualizacion de los canales juntos
     if(modo==0){
     Mat img= foto[nfoto].img;
     Mat gris, hist;
@@ -1112,6 +1113,7 @@ void ver_ecualizacion_histograma(int nfoto, int modo, bool guardar){
     imshow(foto[nfoto].nombre, res);
     }
 
+    //Ecualizacion de los canales por separado
         else{
     Mat img=foto[nfoto].img;
     Mat canales[3];
@@ -1204,13 +1206,13 @@ QString ver_informacion_imagen(int nfoto, int tipo){
         break;
     }
     case 5: {
-        //comprobamos el numero de canales y el tipo de datos de la imagen siendo este RGB (CV_8UC3)
-        if (canales == 3 && imagen.type() == CV_8UC3) {
+        //comprobamos el numero de canales
+        if (canales == 3) {
                    double media_imagen = (media_color[0] + media_color[1] + media_color[2]) / 3;
                    //BGR
                    double mediaRojo = media_color[2];
                    double mediaVerde = media_color[1];
-                   double mediaAzul = media_color[0]; //B
+                   double mediaAzul = media_color[0];
 
                    valor = QString("Color medio de la imagen: %1 \nColor Rojo: %2 \nColor Verde: %3 \nColor Azul: %4 ")
                            .arg(media_imagen).arg(mediaRojo).arg(mediaVerde).arg(mediaAzul);

@@ -6,7 +6,6 @@ Ajustelineal::Ajustelineal(int numfoto, QWidget *parent) :
     QDialog(parent),
     ui(new Ui::Ajustelineal)
 {
-    //al llamar al constructor se hace esto
     ui->setupUi(this);
     nfoto=numfoto;
     pmin=2;

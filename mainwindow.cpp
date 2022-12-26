@@ -289,7 +289,6 @@ void MainWindow::on_actionBrillo_contraste_triggered()
 
 void MainWindow::on_actionGausiano_triggered()
 {
-    //suavizados es una clase que devuelve una imagen con un filtro especifico.
     if (foto_activa() !=- 1) {
         suavizados sg(foto_activa(), 1, this);
         sg.exec();
@@ -344,7 +343,7 @@ void MainWindow::on_toolButton_7_clicked()
 void MainWindow::on_actionRect_ngulo_triggered()
 {
     herr_actual=HER_RECTANGULO;
-    ui->toolButton_7->setChecked(true); //solo se pone aqui porque al pulsar el boton directamente ya se hace
+    ui->toolButton_7->setChecked(true);
 }
 
 void MainWindow::on_actionElipse_triggered()
@@ -360,10 +359,8 @@ void MainWindow::on_toolButton_8_clicked()
 
 void MainWindow::on_actionMediana_triggered()
 {
-    //primero comprueba si la foto activa es distinto de -1.
+
     if(foto_activa()!=1){
-        //cuadro de dialogo del suavizado
-        //numero de foto y tipo de suavizado y padre.
         suavizados s(foto_activa(),3,this);
         //s cra l
         s.exec();
@@ -372,10 +369,8 @@ void MainWindow::on_actionMediana_triggered()
 
 void MainWindow::on_actionCopiar_a_nueva_triggered()
 {
-    //comprobamos que la imagen este activa y haya alguna posicion libre en el array de imagenes.
     if(foto_activa()!=-1 && primera_libre()!=-1){
         int num=foto_activa();
-        //obtnemos la zona seleccionada
         Mat imgres = foto[num].img(foto[num].roi).clone();
         crear_nueva(primera_libre(),imgres);
     }
@@ -396,7 +391,7 @@ void MainWindow::on_toolButton_9_clicked()
 void MainWindow::on_actionArcoiris_triggered()
 {
     herr_actual=HER_ARCOIRIS;
-   // ui->toolButton_9->setChecked(true);
+    ui->toolButton_9->setChecked(true);
 }
 
 void MainWindow::on_actionGrises_triggered()
@@ -444,7 +439,6 @@ void MainWindow::on_actionBajorrelieve_triggered()
 void MainWindow::on_actionAjuste_lineal_triggered()
 {
     if(foto_activa()!= -1){
-        //llamamos al constructor
         Ajustelineal al(foto_activa());
         al.exec();
     }

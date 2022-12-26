@@ -16,6 +16,7 @@ RojoVerdeAzul::RojoVerdeAzul(int nfoto,QWidget *parent) :
     RGB_mult[1]=1;
     RGB_mult[2]=1;
 
+    set_callback_foto(nfoto,false);
     ver_rojo_verde_azul(nfoto,RGB_mult,RGB_sum);
 
 }
@@ -23,6 +24,7 @@ RojoVerdeAzul::RojoVerdeAzul(int nfoto,QWidget *parent) :
 RojoVerdeAzul::~RojoVerdeAzul()
 {
     delete ui;
+    set_callback_foto(nfoto,true);
     destroyWindow("Ajuste RGB");
 }
 

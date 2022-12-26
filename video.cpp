@@ -124,14 +124,11 @@ void mostrar_camara (void)
 
 void capturar_camara(int nres)
 {
-    //Podemos mejorarlo permitiendo al usuario que elija la camara con la que abrirlo
     VideoCapture cap(0);
     if(cap.isOpened()){
         Mat frame;
         cap.read(frame);
         int tecla=0;
-        //mientras no se haya pulsado una tecla seguimos mostrando. Cuando pulsemos una tecla tomamos la captura
-        //si el frame no muestra nada entonces tampoco podemos coger la captura
         while((tecla=waitKey(1))== -1 && !frame.empty()){
             namedWindow("Pulse una tecla para capturar",0);
             //mostrar en la ventana anterior la imagen capturada
@@ -199,13 +196,14 @@ void movimiento (String nombre, int framei, int framef, int nres)
 void minima_maxima(String nombre, int framei, int framef){
     VideoCapture cap(nombre);
      if(cap.isOpened()) {
-         cap.set(CAP_PROP_POS_FRAMES, framei); //nos situamos en el principio del vídeo.
+         cap.set(CAP_PROP_POS_FRAMES, framei);
          Mat frame, minima,maxima;
          if(cap.read(frame)){
              int pos=framei+1;
              frame.copyTo(minima);
              frame.copyTo(maxima);
              while(cap.read(frame) && pos<=framef && waitKey(1)==-1){
+                 //Calculamos el minimo y el maximo
                     pos++;
                     min(minima,frame,minima);
                     max(maxima,frame,maxima);
@@ -257,7 +255,7 @@ void ver_caras_video(String nombre){
            for (int i= 0; i<caras.size(); i++){
              rectangle(img, caras[i], CV_RGB(255,0,0), 2);
            }
-           namedWindow("Imagen", WINDOW_NORMAL);
+           namedWindow("Pulsa un botón para terminar el proceso", WINDOW_NORMAL);
            imshow("Imagen", img);
            writer << img;
 

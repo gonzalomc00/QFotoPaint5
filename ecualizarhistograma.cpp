@@ -9,11 +9,13 @@ EcualizarHistograma::EcualizarHistograma(int numfoto,QWidget *parent) :
     ui->setupUi(this);
     nfoto=numfoto;
     modo=0;
+    set_callback_foto(nfoto,false);
     ver_ecualizacion_histograma(nfoto,modo,false);
 }
 
 EcualizarHistograma::~EcualizarHistograma()
 {
+    set_callback_foto(nfoto,true);
     delete ui;
 }
 
